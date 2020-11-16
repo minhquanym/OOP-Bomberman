@@ -24,8 +24,8 @@ import static java.lang.System.exit;
 
 public class BombermanGame extends Application {
     
-    public static final int WIDTH = 32;
-    public static final int HEIGHT = 22;
+    public static final int WIDTH = 100;
+    public static final int HEIGHT = 100;
 
     public static final int TILES_SIZE = 16;
     
@@ -39,8 +39,8 @@ public class BombermanGame extends Application {
     private Map Board = new Map();
 
     public BombermanGame() {
-        player = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        player = new Bomber(1, 1, Sprite.player_right.getFxImage(), 0, 1, false, 1);
+        player = new Bomber(Sprite.SCALED_SIZE / 8, Sprite.SCALED_SIZE / 8, Sprite.player_right.getFxImage());
+        player = new Bomber(Sprite.SCALED_SIZE / 8, Sprite.SCALED_SIZE / 8, Sprite.player_right.getFxImage(), 0, 1, false, 1);
     }
 
     public static void main(String[] args) {

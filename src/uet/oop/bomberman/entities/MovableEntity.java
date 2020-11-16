@@ -1,6 +1,11 @@
 package uet.oop.bomberman.entities;
 
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class MovableEntity extends Entity {
     protected int animationStep = 0;
@@ -23,5 +28,16 @@ public abstract class MovableEntity extends Entity {
             // reset it
             animationStep = 0;
         }
+    }
+
+    @Override
+    public void render(GraphicsContext gc) {
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+
+        ImageView iv = new ImageView(img);
+        Image base = iv.snapshot(params, null);
+
+        gc.drawImage(base, x * Sprite.SCALED_SIZE / 8, y * Sprite.SCALED_SIZE / 8);
     }
 }
