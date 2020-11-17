@@ -69,43 +69,44 @@ public class Bomber extends MovableEntity {
 
     void updatePosition() {
         switch (direction) {
-            case 0 :
+            case 0:
                 y -= speed;
                 break;
-            case 1 :
+            case 1:
                 x += speed;
                 break;
-            case 2 :
+            case 2:
                 y += speed;
                 break;
-            case 3 :
+            case 3:
                 x -= speed;
                 break;
         }
+        System.out.println("Update player: " + x + " " + y);
     }
 
     // update image which suits for new direction and new animationStep
     void updateImage() {
         switch (direction) {
-            case 0 :
+            case 0:
                 img = Sprite.player_up.getFxImage();
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_up_1, Sprite.player_up_2, animationStep, 3).getFxImage();
                 }
                 break;
-            case 1 :
+            case 1:
                 img = Sprite.player_right.getFxImage();
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_right_1, Sprite.player_right_2, animationStep, 3).getFxImage();
                 }
                 break;
-            case 2 :
+            case 2:
                 img = Sprite.player_down.getFxImage();
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_down_1, Sprite.player_down_2, animationStep, 3).getFxImage();
                 }
                 break;
-            case 3 :
+            case 3:
                 img = Sprite.player_left.getFxImage();
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_left_1, Sprite.player_left_2, animationStep, 3).getFxImage();

@@ -30,14 +30,14 @@ public abstract class MovableEntity extends Entity {
         }
     }
 
-    @Override
-    public void render(GraphicsContext gc) {
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-
-        ImageView iv = new ImageView(img);
-        Image base = iv.snapshot(params, null);
-
-        gc.drawImage(base, x * Sprite.SCALED_SIZE / 8, y * Sprite.SCALED_SIZE / 8);
-    }
+//    @Override
+//    public void render(GraphicsContext gc) {
+//        SnapshotParameters params = new SnapshotParameters();
+//        params.setFill(Color.TRANSPARENT);
+//
+//        ImageView iv = new ImageView(img);
+//        Image base = iv.snapshot(params, null);
+//
+//        gc.drawImage(base, x * Sprite.SCALED_SIZE / 8, y * Sprite.SCALED_SIZE / 8);
+//    }
 }
