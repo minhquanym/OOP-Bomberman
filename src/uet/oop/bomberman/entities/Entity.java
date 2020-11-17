@@ -30,6 +30,9 @@ public abstract class Entity {
     public void setImg(Image img) {
         this.img = img;
     }
+    public Image getImg() {
+        return this.img;
+    }
 
     public void render(GraphicsContext gc) {
         SnapshotParameters params = new SnapshotParameters();
@@ -37,10 +40,7 @@ public abstract class Entity {
 
         ImageView iv = new ImageView(img);
         Image base = iv.snapshot(params, null);
-
-
         gc.drawImage(base, x, y);
-        //gc.clearRect(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
     }
     public abstract void update();
 }

@@ -82,7 +82,6 @@ public class Bomber extends MovableEntity {
                 x -= speed;
                 break;
         }
-        System.out.println("Update player: " + x + " " + y);
     }
 
     // update image which suits for new direction and new animationStep

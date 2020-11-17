@@ -15,7 +15,7 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
-
+import uet.oop.bomberman.Map;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +37,9 @@ public class BombermanGame extends Application {
     private List<Entity> stillObjects = new ArrayList<>();
     private boolean flag = false;
 
-    private Map Board = new Map();
 
     public BombermanGame() {
-        player = new Bomber(0, 0, Sprite.player_right.getFxImage(), 0, 1, false, 1);
+        player = new Bomber(0, 0, Sprite.player_right.getFxImage(), 0, 1, false, 4);
     }
 
     public static void main(String[] args) {
@@ -92,17 +91,11 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
-        Board.loadMap();
+        Map.loadMap();
 
-        for (int i = 0; i < Board.getNumCol(); i++) {
-            for (int j = 0; j < Board.getNumRow(); j++) {
-                if (Board.getValueAtCell(i, j) == '#') {
-                    Entity object = new Wall(i * Sprite.SCALED_SIZE, j * Sprite.SCALED_SIZE, Sprite.wall.getFxImage());
-                    entities.add(object);
-                } else {
-                    Entity object = new Grass(i * Sprite.SCALED_SIZE, j * Sprite.SCALED_SIZE, Sprite.grass.getFxImage());
-                    entities.add(object);
-                }
+        for (int i = 0; i < Map.getNumRow(); i++) {
+            for (int j = 0; j < Map.getNumCol(); j++) {
+                entities.add(Map.getEntityAtCell(i, j));
             }
         }
     }
@@ -116,14 +109,7 @@ public class BombermanGame extends Application {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             entities.forEach(g -> g.render(gc));
             flag = true;
-
-        } else {
-            double x = player.getX();
-            double y = player.getY();
-            gc.clearRect(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-            System.out.println("Clear : " + x + " " + y);
         }
         player.render(gc);
-
     }
 }

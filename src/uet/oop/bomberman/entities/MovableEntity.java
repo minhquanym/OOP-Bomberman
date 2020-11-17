@@ -5,7 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.SnapshotParameters;
+
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.Map;
 
 public abstract class MovableEntity extends Entity {
     protected int animationStep = 0;
@@ -21,6 +24,20 @@ public abstract class MovableEntity extends Entity {
         this.animationStep = animationStep;
     }
 
+//	public boolean canMove(double x, double y) {
+//		for (int c = 0; c < 4; c++) { //colision detection for each corner of the player
+//			double xt = ((_x + x) + c % 2 * 11) / Game.TILES_SIZE; //divide with tiles size to pass to tile coordinate
+//			double yt = ((_y + y) + c / 2 * 12 - 13) / Game.TILES_SIZE; //these values are the best from multiple tests
+//
+//			Entity a = Map.getEntityAtCell(xt, yt, this);
+//
+//			if(!a.collide(this))
+//				return false;
+//		}
+//
+//		return true;
+//	}
+
     public void animate() {
         if (animationStep+1 <= MAX_ANIMATION_STEP) {
             animationStep++;
@@ -30,14 +47,26 @@ public abstract class MovableEntity extends Entity {
         }
     }
 
-//    @Override
-//    public void render(GraphicsContext gc) {
-//        SnapshotParameters params = new SnapshotParameters();
-//        params.setFill(Color.TRANSPARENT);
-//
-//        ImageView iv = new ImageView(img);
-//        Image base = iv.snapshot(params, null);
-//
-//        gc.drawImage(base, x * Sprite.SCALED_SIZE / 8, y * Sprite.SCALED_SIZE / 8);
-//    }
+    @Override
+    public void render(GraphicsContext gc) {
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+
+        ImageView iv = new ImageView(img);
+        Image base = iv.snapshot(params, null);
+
+        int _x = (int)(x / Sprite.SCALED_SIZE);
+        int _y = (int)(y / Sprite.SCALED_SIZE);
+
+        // remove 9 tiles
+        for (int i = Math.max(0, _x - 1); i < Math.min(Map.getNumCol(), _x + 2); i++) {
+            for (int j = Math.max(0, _y - 1); j < Math.min(Map.getNumRow(), _y + 2); j++) {
+                Entity tile = Map.getEntityAtCell(j, i);
+                Image img = tile.getImg();
+                gc.clearRect(tile.getX(), tile.getY(), img.getWidth(), img.getHeight());
+                tile.render(gc);
+            }
+        }
+        gc.drawImage(base, x, y);
+    }
 }
