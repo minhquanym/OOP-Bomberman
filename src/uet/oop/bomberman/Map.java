@@ -39,6 +39,7 @@ public class Map {
     public static Entity getEntityAtCell(int i, int j) {
         return entityMap[i][j];
     }
+
     static void loadMap() {
         try {
             reader = new Scanner(new File("res/levels/Level1.txt"));

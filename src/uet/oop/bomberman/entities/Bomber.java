@@ -7,7 +7,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import uet.oop.bomberman.Map;
 import uet.oop.bomberman.graphics.Sprite;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Bomber extends MovableEntity {
     /*
@@ -47,6 +51,32 @@ public class Bomber extends MovableEntity {
         this.speed = speed;
     }
 
+    public boolean isGrass(double newX, double newY) {
+        for (int c = 0; c < 4; c++) {
+            int _x = (int)((newX + Sprite.CHECK_SIZE * (c % 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE) * (1 - c % 2)) / Sprite.SCALED_SIZE);
+            int _y = (int)((newY + Sprite.CHECK_SIZE * (c / 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE) * (1 - c / 2)) / Sprite.SCALED_SIZE);
+            if (!(Map.getEntityAtCell(_y, _x) instanceof Grass)) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+    public Set<Integer> getCanDirection() {
+        Set<Integer> canDirection = new HashSet<Integer>();
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {-1, 0, 1, 0};
+        for (int dir = 0; dir < 4; dir++) {
+            double newX = this.getX() + dx[dir]*speed;
+            double newY = this.getY() + dy[dir]*speed;
+
+            if (isGrass(newX, newY)) {
+                canDirection.add(dir);
+            }
+        }
+        return canDirection;
+    }
+
     @Override
     public void update() {
         isMoving = true;
@@ -66,8 +96,11 @@ public class Bomber extends MovableEntity {
         updatePosition();
         updateImage();
     }
-
     void updatePosition() {
+        Set<Integer> canDirection = getCanDirection();
+        if (!canDirection.contains(direction)) {
+            return;
+        }
         switch (direction) {
             case 0:
                 y -= speed;

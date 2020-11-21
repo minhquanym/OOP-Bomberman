@@ -39,7 +39,7 @@ public class BombermanGame extends Application {
 
 
     public BombermanGame() {
-        player = new Bomber(0, 0, Sprite.player_right.getFxImage(), 0, 1, false, 4);
+        player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
     }
 
     public static void main(String[] args) {

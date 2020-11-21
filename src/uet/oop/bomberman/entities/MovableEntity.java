@@ -10,6 +10,8 @@ import javafx.scene.SnapshotParameters;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.Map;
 
+import java.util.ArrayList;
+
 public abstract class MovableEntity extends Entity {
     protected int animationStep = 0;
     public static int MAX_ANIMATION_STEP = 9400;
@@ -62,8 +64,6 @@ public abstract class MovableEntity extends Entity {
         for (int i = Math.max(0, _x - 1); i < Math.min(Map.getNumCol(), _x + 2); i++) {
             for (int j = Math.max(0, _y - 1); j < Math.min(Map.getNumRow(), _y + 2); j++) {
                 Entity tile = Map.getEntityAtCell(j, i);
-                Image img = tile.getImg();
-                gc.clearRect(tile.getX(), tile.getY(), img.getWidth(), img.getHeight());
                 tile.render(gc);
             }
         }
