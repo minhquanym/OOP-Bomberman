@@ -42,14 +42,17 @@ public class Map {
 
     static void loadMap() {
         try {
-            reader = new Scanner(new File("res/levels/Level1.txt"));
+            reader = new Scanner(new File("res/levels/Level2.txt"));
         } catch (FileNotFoundException err) {
+            System.out.println("CCCCC\n");
             err.printStackTrace();
         }
         idLevel = reader.nextInt();
         numRow = reader.nextInt();
         numCol = reader.nextInt();
         reader.nextLine();
+
+        System.out.println(idLevel + " " + numRow + " " + numCol);
 
         gameMap = new char[numRow][numCol];
         entityMap = new Entity[numRow][numCol];

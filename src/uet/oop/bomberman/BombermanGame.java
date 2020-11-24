@@ -9,6 +9,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -24,13 +25,15 @@ import static java.lang.System.exit;
 
 public class BombermanGame extends Application {
     
-    public static final int WIDTH = 100;
-    public static final int HEIGHT = 100;
+    public static final int WIDTH = 16;
+    public static final int HEIGHT = 16;
 
     public static final int TILES_SIZE = 16;
     
     private GraphicsContext gc;
     private Canvas canvas;
+
+    private GameCamera camera;
 
     private Bomber player = new Bomber(1, 1, Sprite.player_right.getFxImage());
     private List<Entity> entities = new ArrayList<>();
@@ -39,7 +42,7 @@ public class BombermanGame extends Application {
 
 
     public BombermanGame() {
-        player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
+        player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 8);
     }
 
     public static void main(String[] args) {
@@ -48,8 +51,11 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
+        // create map
+        createMap();
+
         // Tao Canvas
-        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas = new Canvas(Sprite.SCALED_SIZE * Map.getNumCol(), Sprite.SCALED_SIZE * Map.getNumRow());
         gc = canvas.getGraphicsContext2D();
 
         // Tao root container
@@ -58,26 +64,34 @@ public class BombermanGame extends Application {
 
         // Tao scene
         Scene scene = new Scene(root);
+        scene.setFill(Color.rgb(80, 160, 0));
 
         // Them scene vao stage
+        stage.setHeight(HEIGHT * Sprite.SCALED_SIZE);
+        stage.setWidth(WIDTH * Sprite.SCALED_SIZE);
         stage.setScene(scene);
         stage.show();
 
-        // set animation timer
-//        long lastTime = 0;
+        // set up camera
+        camera = new GameCamera();
 
-
+        // initialize
         AnimationTimer timer = new AnimationTimer() {
+            long lastTime = 0;
+
             @Override
             public void handle(long now) {
-                update();
-                render();
-//                gc.clearRect(0, 0, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+                if (now - lastTime >= 100000000 / 3) {
+                    update();
+                    lastTime = now;
+                }
             }
         };
-        timer.start();
 
-        createMap();
+        // render first map
+        render();
+
+        timer.start();
 
         // add key listener to scene
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -102,14 +116,15 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
+        camera.update(player);
+        canvas.setTranslateX(-camera.getxOffset());
+        canvas.setTranslateY(-camera.getyOffset());
+
+        player.render(gc);
     }
 
     public void render() {
-        if (!flag) {
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            entities.forEach(g -> g.render(gc));
-            flag = true;
-        }
+        entities.forEach(g -> g.render(gc));
         player.render(gc);
     }
 }

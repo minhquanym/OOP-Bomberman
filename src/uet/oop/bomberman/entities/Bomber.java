@@ -95,6 +95,8 @@ public class Bomber extends MovableEntity {
         animate();
         updatePosition();
         updateImage();
+
+        keyboardInput = null;
     }
     void updatePosition() {
         Set<Integer> canDirection = getCanDirection();
@@ -123,27 +125,35 @@ public class Bomber extends MovableEntity {
             case 0:
                 img = Sprite.player_up.getFxImage();
                 if (isMoving) {
-                    img = Sprite.movingSprite(Sprite.player_up_1, Sprite.player_up_2, animationStep, 3).getFxImage();
+                    img = Sprite.movingSprite(Sprite.player_up_1, Sprite.player_up_2, animationStep, 20).getFxImage();
                 }
                 break;
             case 1:
                 img = Sprite.player_right.getFxImage();
                 if (isMoving) {
-                    img = Sprite.movingSprite(Sprite.player_right_1, Sprite.player_right_2, animationStep, 3).getFxImage();
+                    img = Sprite.movingSprite(Sprite.player_right_1, Sprite.player_right_2, animationStep, 20).getFxImage();
                 }
                 break;
             case 2:
                 img = Sprite.player_down.getFxImage();
                 if (isMoving) {
-                    img = Sprite.movingSprite(Sprite.player_down_1, Sprite.player_down_2, animationStep, 3).getFxImage();
+                    img = Sprite.movingSprite(Sprite.player_down_1, Sprite.player_down_2, animationStep, 20).getFxImage();
                 }
                 break;
             case 3:
                 img = Sprite.player_left.getFxImage();
                 if (isMoving) {
-                    img = Sprite.movingSprite(Sprite.player_left_1, Sprite.player_left_2, animationStep, 3).getFxImage();
+                    img = Sprite.movingSprite(Sprite.player_left_1, Sprite.player_left_2, animationStep, 20).getFxImage();
                 }
                 break;
         }
+    }
+
+    public double getImgWidth() {
+        return img.getWidth();
+    }
+
+    public double getImgHeight() {
+        return img.getHeight();
     }
 }
