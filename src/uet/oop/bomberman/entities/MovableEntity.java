@@ -57,8 +57,8 @@ public abstract class MovableEntity extends Entity {
         ImageView iv = new ImageView(img);
         Image base = iv.snapshot(params, null);
 
-        int _x = (int)(x / Sprite.SCALED_SIZE);
-        int _y = (int)(y / Sprite.SCALED_SIZE);
+        int _x = (int)((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+        int _y = (int)((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
 
         // remove 9 tiles
         for (int i = Math.max(0, _x - 1); i < Math.min(Map.getNumCol(), _x + 2); i++) {
