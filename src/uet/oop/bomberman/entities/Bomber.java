@@ -24,9 +24,6 @@ public class Bomber extends MovableEntity {
              2
     */
     private KeyCode keyboardInput;
-    private int direction;
-    private boolean isMoving;
-    private int speed;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img, 0);
@@ -41,40 +38,11 @@ public class Bomber extends MovableEntity {
         this.direction = direction;
         this.isMoving = isMoving;
         this.speed = speed;
+        this.alive = true;
     }
 
     public void setKeyboardInput(KeyCode keyboardInput) {
         this.keyboardInput = keyboardInput;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public boolean isGrass(double newX, double newY) {
-        for (int c = 0; c < 4; c++) {
-            int _x = (int)((newX + (Sprite.CHECK_SIZE - 1) * (c % 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE - 1) * (1 - c % 2)) / Sprite.SCALED_SIZE);
-            int _y = (int)((newY + (Sprite.CHECK_SIZE - 1) * (c / 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE - 1) * (1 - c / 2)) / Sprite.SCALED_SIZE);
-            if (!(Map.getEntityAtCell(_y, _x) instanceof Grass)) {
-                return false;
-            }
-        }
-        return true;
-
-    }
-    public Set<Integer> getCanDirection() {
-        Set<Integer> canDirection = new HashSet<Integer>();
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {-1, 0, 1, 0};
-        for (int dir = 0; dir < 4; dir++) {
-            double newX = this.getX() + dx[dir]*speed;
-            double newY = this.getY() + dy[dir]*speed;
-
-            if (isGrass(newX, newY)) {
-                canDirection.add(dir);
-            }
-        }
-        return canDirection;
     }
 
     @Override
@@ -98,29 +66,9 @@ public class Bomber extends MovableEntity {
 
         keyboardInput = null;
     }
-    void updatePosition() {
-        Set<Integer> canDirection = getCanDirection();
-        if (!canDirection.contains(direction)) {
-            return;
-        }
-        switch (direction) {
-            case 0:
-                y -= speed;
-                break;
-            case 1:
-                x += speed;
-                break;
-            case 2:
-                y += speed;
-                break;
-            case 3:
-                x -= speed;
-                break;
-        }
-    }
 
     // update image which suits for new direction and new animationStep
-    void updateImage() {
+    protected void updateImage() {
         switch (direction) {
             case 0:
                 img = Sprite.player_up.getFxImage();
@@ -130,6 +78,7 @@ public class Bomber extends MovableEntity {
                 break;
             case 1:
                 img = Sprite.player_right.getFxImage();
+//                img = Sprite.player_up.
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_right_1, Sprite.player_right_2, animationStep, 20).getFxImage();
                 }
