@@ -107,24 +107,24 @@ public abstract class MovableEntity extends Entity {
         }
     }
 
-    @Override
-    public void render(GraphicsContext gc) {
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
-
-        ImageView iv = new ImageView(img);
-        Image base = iv.snapshot(params, null);
-
-        int _x = (int)((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
-        int _y = (int)((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
-
-        // remove 9 tiles
-        for (int i = Math.max(0, _x - 1); i < Math.min(Map.getNumCol(), _x + 2); i++) {
-            for (int j = Math.max(0, _y - 1); j < Math.min(Map.getNumRow(), _y + 2); j++) {
-                Entity tile = Map.getEntityAtCell(j, i);
-                tile.render(gc);
-            }
-        }
-        gc.drawImage(base, x, y);
-    }
+//    @Override
+//    public void render(GraphicsContext gc) {
+//        SnapshotParameters params = new SnapshotParameters();
+//        params.setFill(Color.TRANSPARENT);
+//
+//        ImageView iv = new ImageView(img);
+//        Image base = iv.snapshot(params, null);
+//
+//        int _x = (int)((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+//        int _y = (int)((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+//
+//        // remove 9 tiles
+//        for (int i = Math.max(0, _x - 1); i < Math.min(Map.getNumCol(), _x + 2); i++) {
+//            for (int j = Math.max(0, _y - 1); j < Math.min(Map.getNumRow(), _y + 2); j++) {
+//                Entity tile = Map.getEntityAtCell(j, i);
+//                tile.render(gc);
+//            }
+//        }
+//        gc.drawImage(base, x, y);
+//    }
 }

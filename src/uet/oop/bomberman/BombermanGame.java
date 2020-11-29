@@ -34,7 +34,8 @@ public class BombermanGame extends Application {
     private Bomber player;
     private Enemy enemy;
     private List<Entity> entities = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
+    private List<Entity> staticFinalObjects = new ArrayList<>();
+    private List<Entity> staticObjects = new ArrayList<>();
     private boolean flag = false;
 
     public BombermanGame() {
@@ -51,6 +52,7 @@ public class BombermanGame extends Application {
     public void start(Stage stage) {
         // create map
         createMap();
+        entities.add(player);
 
         // create Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * Map.getNumCol(), Sprite.SCALED_SIZE * Map.getNumRow());
@@ -62,7 +64,6 @@ public class BombermanGame extends Application {
 
         // create scene
         Scene scene = new Scene(root);
-        scene.setFill(Color.rgb(80, 160, 0));
 
         // add scene to stage
         stage.setHeight(HEIGHT * Sprite.SCALED_SIZE);
@@ -73,7 +74,7 @@ public class BombermanGame extends Application {
         // set up camera
         camera = new GameCamera();
 
-        // initialize
+        // initialize animation timer
         AnimationTimer timer = new AnimationTimer() {
             long lastTime = 0;
             final long timeRender = 100000000/3;
@@ -88,12 +89,10 @@ public class BombermanGame extends Application {
             }
         };
 
-        // render first map
-        entities.forEach(g -> g.render(gc));
-        player.render(gc);
-        enemy.render(gc);
+//        System.out.println(entities.size());
 
         // start
+        render();
         timer.start();
 
         // add key listener to scene
@@ -117,7 +116,22 @@ public class BombermanGame extends Application {
 
         for (int i = 0; i < Map.getNumRow(); i++) {
             for (int j = 0; j < Map.getNumCol(); j++) {
-                entities.add(Map.getEntityAtCell(i, j));
+                if (Map.getValueAtCell(i, j) == '#') {
+                    // Wall
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
+                } else if (Map.getValueAtCell(i, j) == ' ') {
+                    // Grass
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
+                } else if (Map.getValueAtCell(i, j) == '*') {
+                    // Brick
+                    staticObjects.add(Map.getEntityAtCell(i, j));
+                } else if (Map.getValueAtCell(i, j) == 'x') {
+                    // Portal
+                    staticObjects.add(Map.getEntityAtCell(i, j));
+                } else {
+                    // something else
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
+                }
             }
         }
     }
@@ -129,14 +143,17 @@ public class BombermanGame extends Application {
         canvas.setTranslateY(-camera.getyOffset());
 
         // update entities
-//        entities.forEach(Entity::update);
-        player.update();
-        enemy.update();
+//        player.update();
+        entities.forEach(Entity::update);
+        staticObjects.forEach(Entity::update);
+        staticFinalObjects.forEach(Entity::update);
     }
 
     public void render() {
-//        entities.forEach(g -> g.render(gc));
-        enemy.render(gc);
-        player.render(gc);
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        staticObjects.forEach(g -> g.render(gc));
+        staticFinalObjects.forEach(g -> g.render(gc));
+        entities.forEach(g -> g.render(gc));
+//        player.render(gc);
     }
 }

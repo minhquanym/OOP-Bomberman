@@ -78,7 +78,6 @@ public class Bomber extends MovableEntity {
                 break;
             case 1:
                 img = Sprite.player_right.getFxImage();
-//                img = Sprite.player_up.
                 if (isMoving) {
                     img = Sprite.movingSprite(Sprite.player_right_1, Sprite.player_right_2, animationStep, 20).getFxImage();
                 }

@@ -35,12 +35,14 @@ public abstract class Entity {
     }
 
     public void render(GraphicsContext gc) {
-        SnapshotParameters params = new SnapshotParameters();
-        params.setFill(Color.TRANSPARENT);
+//        SnapshotParameters params = new SnapshotParameters();
+//        params.setFill(Color.TRANSPARENT);
+//
+//        ImageView iv = new ImageView(img);
+//        Image base = iv.snapshot(params, null);
+//        gc.drawImage(base, x, y);
 
-        ImageView iv = new ImageView(img);
-        Image base = iv.snapshot(params, null);
-        gc.drawImage(base, x, y);
+        gc.drawImage(img, x, y);
     }
     public abstract void update();
 }
