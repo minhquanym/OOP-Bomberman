@@ -236,8 +236,23 @@ public class Sprite {
 	}
 	
 	public static Sprite movingSprite(Sprite x1, Sprite x2, int animate, int time) {
-		int diff = time / 2;
-		return (animate % time > diff) ? x1 : x2; 
+//		int diff = time / 2;
+//		return (animate % time > diff) ? x1 : x2;
+		if (animate % 8 < 4) {
+			return x1;
+		} else {
+			return x2;
+		}
+	}
+
+	public static Sprite dieSprite(Sprite normal, Sprite x1, Sprite x2, int animate) {
+		if (animate < 6) {
+			return normal;
+		} else if (animate < 12) {
+			return x1;
+		} else {
+			return x2;
+		}
 	}
 	
 	public int getSize() {

@@ -2,7 +2,9 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class Bomber extends MovableEntity {
     public List<Bomb> bombList = new ArrayList<Bomb>();
     public int bombRange = 2;
     public int bombLimit = 4;
+    protected int timeLiveLeft;
 
     private KeyCode keyboardInput;
 
@@ -56,6 +59,12 @@ public class Bomber extends MovableEntity {
         this.bombLimit = bombLimit;
     }
 
+    @Override
+    public void setAlive(boolean alive) {
+        this.timeLiveLeft = 18;
+        this.alive = alive;
+    }
+
     public Entity placeBomb() {
         Entity bomb = new Bomb((int) Math.round(this.getCellX() * Sprite.SCALED_SIZE),
                 (int) Math.round(this.getCellY() * Sprite.SCALED_SIZE),
@@ -69,6 +78,11 @@ public class Bomber extends MovableEntity {
 
     @Override
     public void update() {
+        if (!isAlive()) {
+            updateImage();
+            return;
+        }
+
         if (!bombList.isEmpty()) {
             if (bombList.get(bombList.size() - 1).isExploded()) {
                 bombList.remove(bombList.size() - 1);
@@ -85,12 +99,6 @@ public class Bomber extends MovableEntity {
             direction = DownDirection;
         } else {
             isMoving = false;
-//            if (keyboardInput == KeyCode.SPACE) {
-//                if (bombList.size() < bombLimit) {
-//                    Entity bomb = placeBomb();
-//                    Bomb
-//                }
-//            }
         }
 
         animate();
@@ -102,6 +110,16 @@ public class Bomber extends MovableEntity {
 
     // update image which suits for new direction and new animationStep
     protected void updateImage() {
+        if (!isAlive()) {
+            if (timeLiveLeft == 0) {
+                img = null;
+                return;
+            }
+            img = Sprite.dieSprite(Sprite.player_dead3, Sprite.player_dead2, Sprite.player_dead1, timeLiveLeft).getFxImage();
+            timeLiveLeft--;
+            return;
+        }
+
         switch (direction) {
             case 0:
                 img = Sprite.player_up.getFxImage();
@@ -130,11 +148,17 @@ public class Bomber extends MovableEntity {
         }
     }
 
-    public double getImgWidth() {
-        return img.getWidth();
-    }
-
-    public double getImgHeight() {
-        return img.getHeight();
+    public boolean enemyCollision(List<Entity> entities) {
+        Rectangle playerRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
+        for (Entity entity : entities) {
+            if (!(entity instanceof Enemy)) {
+                continue;
+            }
+            Rectangle enemyRectangle = new Rectangle(entity.getX(), entity.getY(), entity.getImgWidth(), entity.getImgHeight());
+            if (playerRectangle.intersects(enemyRectangle.getLayoutBounds())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

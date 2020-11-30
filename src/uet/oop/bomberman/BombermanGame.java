@@ -48,7 +48,7 @@ public class BombermanGame extends Application {
 
     public BombermanGame() {
         player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
-        enemy = new Balloom(Sprite.SCALED_SIZE*2, Sprite.SCALED_SIZE, Sprite.balloom_left1.getFxImage(), 0);
+        enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
         enemy.setSpeed(7);
     }
 
@@ -62,6 +62,7 @@ public class BombermanGame extends Application {
         // create map
         createMap();
         entities.add(player);
+        entities.add(enemy);
 
         // create Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * Map.getNumCol(), Sprite.SCALED_SIZE * Map.getNumRow());
@@ -160,6 +161,13 @@ public class BombermanGame extends Application {
         camera.update(player);
         canvas.setTranslateX(-camera.getxOffset());
         canvas.setTranslateY(-camera.getyOffset());
+
+        // collision
+        if (player.enemyCollision(entities)) {
+            player.setAlive(false);
+        }
+
+        // update entities
         entities.forEach(Entity::update);
         staticObjects.forEach(Entity::update);
         staticFinalObjects.forEach(Entity::update);
