@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
@@ -15,7 +17,9 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.enemyObject.Balloom;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.sounds.GameSound;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +49,12 @@ public class BombermanGame extends Application {
     }
 
     public static void main(String[] args) {
+        new GameSound("sounds/beat.wav");
         Application.launch(BombermanGame.class);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws Exception {
         // create map
         createMap();
         entities.add(player);

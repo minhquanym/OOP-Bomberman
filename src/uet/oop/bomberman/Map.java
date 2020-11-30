@@ -43,7 +43,7 @@ public class Map {
     public static boolean isGrass(double newX, double newY) {
         for (int c = 0; c < 4; c++) {
             int _x = (int)((newX + (Sprite.CHECK_SIZE - 1) * (c % 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE - 1) * (1 - c % 2)) / Sprite.SCALED_SIZE);
-            int _y = (int)((newY + (Sprite.CHECK_SIZE - 1) * (c / 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE - 1) * (1 - c / 2)) / Sprite.SCALED_SIZE);
+            int _y = (int)((newY + (Sprite.CHECK_SIZE - 1) * (c / 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE + 1) * (1 - c / 2)) / Sprite.SCALED_SIZE);
             if (!(getEntityAtCell(_y, _x) instanceof Grass)) {
                 return false;
             }
