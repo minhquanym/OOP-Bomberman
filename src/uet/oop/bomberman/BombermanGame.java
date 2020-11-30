@@ -39,17 +39,17 @@ public class BombermanGame extends Application {
     private GameCamera camera;
 
     private Bomber player;
-    private Enemy enemy;
-    private List<Entity> entities = new ArrayList<>();
+    private List<Entity> enemies = new ArrayList<>();
     private List<Entity> flames = new ArrayList<>();
     private List<Entity> staticFinalObjects = new ArrayList<>();
-    private List<Entity> staticObjects = new ArrayList<>();
+    private List<Entity> bricks = new ArrayList<>();
+    private List<Entity> bombs = new ArrayList<>();
     private boolean flag = false;
 
     public BombermanGame() {
         player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
-        enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
-        enemy.setSpeed(7);
+//        enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
+//        enemy.setSpeed(7);
     }
 
     public static void main(String[] args) {
@@ -61,8 +61,6 @@ public class BombermanGame extends Application {
     public void start(Stage stage) throws Exception {
         // create map
         createMap();
-        entities.add(player);
-        entities.add(enemy);
 
         // create Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * Map.getNumCol(), Sprite.SCALED_SIZE * Map.getNumRow());
@@ -99,8 +97,6 @@ public class BombermanGame extends Application {
             }
         };
 
-//        System.out.println(entities.size());
-
         // start
         render();
         timer.start();
@@ -122,8 +118,7 @@ public class BombermanGame extends Application {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
                     Entity bomb = player.placeBomb();
-                    entities.add(bomb);
-                    flames.addAll(((Bomb) bomb).getFlames());
+                    bombs.add(bomb);
                 } else {
                     player.setKeyboardInput(null);
                 }
@@ -144,10 +139,10 @@ public class BombermanGame extends Application {
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
                 } else if (Map.getValueAtCell(i, j) == '*') {
                     // Brick
-                    staticObjects.add(Map.getEntityAtCell(i, j));
+                    bricks.add(Map.getEntityAtCell(i, j));
                 } else if (Map.getValueAtCell(i, j) == 'x') {
                     // Portal
-                    staticObjects.add(Map.getEntityAtCell(i, j));
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
                 } else {
                     // something else
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
@@ -162,14 +157,32 @@ public class BombermanGame extends Application {
         canvas.setTranslateX(-camera.getxOffset());
         canvas.setTranslateY(-camera.getyOffset());
 
-        // collision
-        if (player.enemyCollision(entities)) {
+
+        // player collides flames
+//        if (player.flameCollision(flames)){
+//            player.setAlive(false);
+//        }
+
+        // player collides enemy
+        if (player.enemyCollision(enemies)) {
             player.setAlive(false);
         }
 
+        // enemy collide flames
+
         // update entities
-        entities.forEach(Entity::update);
-        staticObjects.forEach(Entity::update);
+        player.update();
+        for (int idBomb = 0; idBomb < bombs.size(); ++idBomb) {
+            Bomb bomb = (Bomb) bombs.get(idBomb);
+            bomb.update();
+            if (bomb.isExploded()) {
+                flames.addAll(((Bomb)bomb).getFlames());
+                bombs.remove(idBomb);
+            }
+        }
+
+        enemies.forEach(Entity::update);
+        bricks.forEach(Entity::update);
         staticFinalObjects.forEach(Entity::update);
         flames.forEach(Entity::update);
     }
@@ -180,10 +193,18 @@ public class BombermanGame extends Application {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        // clear canvas
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        staticObjects.forEach(g -> g.render(gc));
+
+        // render entities
         staticFinalObjects.forEach(g -> g.render(gc));
-        entities.forEach(g -> g.render(gc));
+        bricks.forEach(g -> g.render(gc));
+
+        player.render(gc);
+        enemies.forEach(g -> g.render(gc));
+
+        bombs.forEach(g -> g.render(gc));
         flames.forEach(g -> g.render(gc));
     }
 }

@@ -5,7 +5,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import uet.oop.bomberman.graphics.Sprite;
+
+import java.util.List;
 
 public abstract class Entity {
     protected double x;
@@ -58,4 +61,15 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
+    public boolean flameCollision(List<Entity> flames) {
+        Rectangle entityRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
+        for (Entity flame : flames) {
+            Rectangle flameRectangle = new Rectangle(flame.getX(), flame.getY(), flame.getImgWidth(), flame.getImgHeight());
+            if (entityRectangle.intersects(flameRectangle.getLayoutBounds())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
