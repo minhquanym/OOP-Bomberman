@@ -1,17 +1,12 @@
 package uet.oop.bomberman.entities;
 
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
-import uet.oop.bomberman.Map;
+import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Bomber extends MovableEntity {
     /*
@@ -23,6 +18,10 @@ public class Bomber extends MovableEntity {
              v
              2
     */
+    public List<Bomb> bombList = new ArrayList<Bomb>();
+    public int bombRange = 2;
+    public int bombLimit = 4;
+
     private KeyCode keyboardInput;
 
     public Bomber(int x, int y, Image img) {
@@ -41,12 +40,40 @@ public class Bomber extends MovableEntity {
         this.alive = true;
     }
 
+    public int getBombRange() {
+        return bombRange;
+    }
+
+    public void setBombRange(int bombRange) {
+        this.bombRange = bombRange;
+    }
+
+    public int getBombLimit() {
+        return bombLimit;
+    }
+
+    public void setBombLimit(int bombLimit) {
+        this.bombLimit = bombLimit;
+    }
+
+    public Entity placeBomb() {
+        Entity bomb = new Bomb((int) Math.round(this.getCellX() * Sprite.SCALED_SIZE),
+                (int) Math.round(this.getCellY() * Sprite.SCALED_SIZE),
+                Sprite.bomb.getFxImage(), this.bombRange);
+        this.bombList.add((Bomb) bomb);
+        return bomb;
+    }
     public void setKeyboardInput(KeyCode keyboardInput) {
         this.keyboardInput = keyboardInput;
     }
 
     @Override
     public void update() {
+        if (!bombList.isEmpty()) {
+            if (bombList.get(bombList.size() - 1).isExploded()) {
+                bombList.remove(bombList.size() - 1);
+            }
+        }
         isMoving = true;
         if (keyboardInput == KeyCode.LEFT) {
             direction = LeftDirection;
@@ -58,6 +85,12 @@ public class Bomber extends MovableEntity {
             direction = DownDirection;
         } else {
             isMoving = false;
+//            if (keyboardInput == KeyCode.SPACE) {
+//                if (bombList.size() < bombLimit) {
+//                    Entity bomb = placeBomb();
+//                    Bomb
+//                }
+//            }
         }
 
         animate();

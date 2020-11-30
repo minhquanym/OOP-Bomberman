@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -14,6 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.bomb.Bomb;
+import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.enemyObject.Balloom;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
@@ -38,6 +41,7 @@ public class BombermanGame extends Application {
     private Bomber player;
     private Enemy enemy;
     private List<Entity> entities = new ArrayList<>();
+    private List<Entity> flames = new ArrayList<>();
     private List<Entity> staticFinalObjects = new ArrayList<>();
     private List<Entity> staticObjects = new ArrayList<>();
     private boolean flag = false;
@@ -104,14 +108,24 @@ public class BombermanGame extends Application {
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                player.setKeyboardInput(event.getCode());
+                if (event.getCode() == KeyCode.SPACE) {
+
+                } else {
+                    player.setKeyboardInput(event.getCode());
+                }
             }
         });
 
         scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                player.setKeyboardInput(null);
+                if (event.getCode() == KeyCode.SPACE) {
+                    Entity bomb = player.placeBomb();
+                    entities.add(bomb);
+                    flames.addAll(((Bomb) bomb).getFlames());
+                } else {
+                    player.setKeyboardInput(null);
+                }
             }
         });
     }
@@ -146,19 +160,22 @@ public class BombermanGame extends Application {
         camera.update(player);
         canvas.setTranslateX(-camera.getxOffset());
         canvas.setTranslateY(-camera.getyOffset());
-
-        // update entities
-//        player.update();
         entities.forEach(Entity::update);
         staticObjects.forEach(Entity::update);
         staticFinalObjects.forEach(Entity::update);
+        flames.forEach(Entity::update);
     }
 
     public void render() {
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         staticObjects.forEach(g -> g.render(gc));
         staticFinalObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
-//        player.render(gc);
+        flames.forEach(g -> g.render(gc));
     }
 }

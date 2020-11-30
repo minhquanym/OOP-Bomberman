@@ -27,6 +27,13 @@ public abstract class Entity {
         return y;
     }
 
+    public int getCellX() {
+        return (int) Math.floor((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+    }
+
+    public int getCellY() {
+        return (int) Math.floor((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+    }
     public void setImg(Image img) {
         this.img = img;
     }

@@ -40,6 +40,11 @@ public class Map {
         return entityMap[i][j];
     }
 
+    public static Entity getEntityAtCoordinate(double x, double y) {
+        int _x = (int) Math.floor((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+        int _y = (int) Math.floor((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
+        return getEntityAtCell(_y, _x);
+    }
     public static boolean isGrass(double newX, double newY) {
         for (int c = 0; c < 4; c++) {
             int _x = (int)((newX + (Sprite.CHECK_SIZE - 1) * (c % 2) + (Sprite.SCALED_SIZE - Sprite.CHECK_SIZE - 1) * (1 - c % 2)) / Sprite.SCALED_SIZE);
