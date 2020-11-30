@@ -53,8 +53,8 @@ public class BombermanGame extends Application {
     }
 
     public static void main(String[] args) {
-        new GameSound("sounds/beat.wav");
         Application.launch(BombermanGame.class);
+        new GameSound("sounds/beat.wav");
     }
 
     @Override
@@ -119,6 +119,8 @@ public class BombermanGame extends Application {
                 if (event.getCode() == KeyCode.SPACE) {
                     Entity bomb = player.placeBomb();
                     bombs.add(bomb);
+                    flames.addAll(((Bomb)bomb).getFlames());
+
                 } else {
                     player.setKeyboardInput(null);
                 }
@@ -159,9 +161,9 @@ public class BombermanGame extends Application {
 
 
         // player collides flames
-//        if (player.flameCollision(flames)){
-//            player.setAlive(false);
-//        }
+        if (player.flameCollision(flames)){
+            player.setAlive(false);
+        }
 
         // player collides enemy
         if (player.enemyCollision(enemies)) {
@@ -172,18 +174,10 @@ public class BombermanGame extends Application {
 
         // update entities
         player.update();
-        for (int idBomb = 0; idBomb < bombs.size(); ++idBomb) {
-            Bomb bomb = (Bomb) bombs.get(idBomb);
-            bomb.update();
-            if (bomb.isExploded()) {
-                flames.addAll(((Bomb)bomb).getFlames());
-                bombs.remove(idBomb);
-            }
-        }
-
         enemies.forEach(Entity::update);
         bricks.forEach(Entity::update);
         staticFinalObjects.forEach(Entity::update);
+        bombs.forEach(Entity::update);
         flames.forEach(Entity::update);
     }
 

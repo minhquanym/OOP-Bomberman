@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -63,8 +64,14 @@ public abstract class Entity {
     public abstract void update();
 
     public boolean flameCollision(List<Entity> flames) {
+        if (this.getImg() == null) {
+            return false;
+        }
         Rectangle entityRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
         for (Entity flame : flames) {
+            if (!((Flame) flame).isExploded() || flame.getImg() == null) {
+                continue;
+            }
             Rectangle flameRectangle = new Rectangle(flame.getX(), flame.getY(), flame.getImgWidth(), flame.getImgHeight());
             if (entityRectangle.intersects(flameRectangle.getLayoutBounds())) {
                 return true;

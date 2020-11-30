@@ -6,6 +6,7 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public class Flame extends Entity {
 
+    private boolean exploded = false;
     private int explosionCountdown = 120;
     private String flameType;
     private boolean done = false;
@@ -17,6 +18,14 @@ public class Flame extends Entity {
     public Flame(double x, double y, Image img, String flameType) {
         super(x, y, img);
         this.flameType = flameType;
+    }
+
+    public boolean isExploded() {
+        return exploded;
+    }
+
+    public void setExploded(boolean exploded) {
+        this.exploded = exploded;
     }
 
     public int getExplosionCountdown() {
@@ -52,6 +61,7 @@ public class Flame extends Entity {
                 setDone(true);
             }
         } else {
+            setExploded(true);
             switch (flameType) {
                 case "left":
                 case "right": {

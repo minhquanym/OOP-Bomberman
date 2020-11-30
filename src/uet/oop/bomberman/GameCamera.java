@@ -35,6 +35,9 @@ public class GameCamera {
     }
 
     public void update(Bomber bomber) {
+        if (!bomber.isAlive()) {
+            return;
+        }
         double size = Sprite.SCALED_SIZE;
         xOffset = bomber.getX() + Math.round(bomber.getImgWidth() / 2) - Math.round(BombermanGame.WIDTH * size / 2.0) ;
         yOffset = bomber.getY() + Math.round(bomber.getImgHeight() / 2) - Math.round(BombermanGame.HEIGHT * size / 2.0);
