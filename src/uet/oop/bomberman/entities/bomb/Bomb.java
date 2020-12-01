@@ -75,7 +75,6 @@ public class Bomb extends Entity {
                 Entity tmp = Map.getEntityAtCoordinate(newX, newY);
                 if (tmp instanceof Brick || tmp instanceof Wall) {
                     if (tmp instanceof Brick) {
-
                     }
                     break;
                 }

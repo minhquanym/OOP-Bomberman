@@ -19,7 +19,7 @@ public class Oneal extends Enemy {
                 img = null;
                 return;
             }
-            img = Sprite.dieSprite(Sprite.balloom_dead, Sprite.oneal_dead, Sprite.oneal_dead, timeLiveLeft).getFxImage();
+            img = Sprite.dieSprite(Sprite.oneal_dead, Sprite.oneal_dead, Sprite.oneal_dead, timeLiveLeft).getFxImage();
             timeLiveLeft--;
             return;
         }

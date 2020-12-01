@@ -14,6 +14,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
@@ -196,7 +197,6 @@ public class BombermanGame extends Application {
         canvas.setTranslateX(-camera.getxOffset());
         canvas.setTranslateY(-camera.getyOffset());
 
-
         // player collides flames
         if (player.flameCollision(flames)){
             player.setAlive(false);
@@ -207,14 +207,25 @@ public class BombermanGame extends Application {
             player.setAlive(false);
         }
 
-        // enemy collide flames
+        // enemy collides flames
         for (int idEnemy = 0; idEnemy < enemies.size(); ++idEnemy) {
             Enemy enemy = (Enemy) enemies.get(idEnemy);
             if (enemy.isAlive() && enemy.flameCollision(flames)) {
                 enemy.setAlive(false);
             }
-            if (!enemy.isAlive() && enemy.getTimeLiveLeft() == 0) {
+            if (!enemy.isAlive() && enemy.getTimeLiveLeft() <= 0) {
                 enemies.remove(idEnemy);
+            }
+        }
+
+        // brick collides flames
+        for (int idBrick = 0; idBrick < bricks.size(); ++idBrick) {
+            Brick brick = (Brick) bricks.get(idBrick);
+            if (!brick.isDestroyed() && brick.flameCollision(flames)) {
+                brick.setDestroyed(true);
+            }
+            if (brick.isDestroyed() && brick.getTimeDestroyingCountDown() <= 0) {
+                bricks.remove(idBrick);
             }
         }
 
