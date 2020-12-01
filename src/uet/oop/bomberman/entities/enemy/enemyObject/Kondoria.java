@@ -14,6 +14,16 @@ public class Kondoria extends Enemy {
 
     @Override
     protected void updateImage() {
+        if (!isAlive()) {
+            if (timeLiveLeft == 0) {
+                img = null;
+                return;
+            }
+            img = Sprite.dieSprite(Sprite.kondoria_dead, Sprite.kondoria_dead, Sprite.kondoria_dead, timeLiveLeft).getFxImage();
+            timeLiveLeft--;
+            return;
+        }
+
         switch (direction) {
             case 0:
             case 1:

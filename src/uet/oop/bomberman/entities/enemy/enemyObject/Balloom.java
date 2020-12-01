@@ -14,6 +14,16 @@ public class Balloom extends Enemy {
 
     @Override
     protected void updateImage() {
+        if (!isAlive()) {
+            if (timeLiveLeft == 0) {
+                img = null;
+                return;
+            }
+            img = Sprite.dieSprite(Sprite.balloom_dead, Sprite.balloom_dead, Sprite.balloom_dead, timeLiveLeft).getFxImage();
+            timeLiveLeft--;
+            return;
+        }
+
         switch (direction) {
             case 0:
             case 1:
@@ -33,6 +43,10 @@ public class Balloom extends Enemy {
     @Override
     public void update() {
         direction = enemyAI.getDirection();
+//        if (!isAlive()) {
+//            isMoving = false;
+//        }
+
         updateImage();
         updatePosition();
     }

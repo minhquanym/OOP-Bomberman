@@ -14,10 +14,11 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
-import uet.oop.bomberman.entities.enemy.enemyObject.Balloom;
+import uet.oop.bomberman.entities.enemy.enemyObject.*;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.sounds.GameSound;
@@ -48,8 +49,6 @@ public class BombermanGame extends Application {
 
     public BombermanGame() {
         player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
-//        enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
-//        enemy.setSpeed(7);
     }
 
     public static void main(String[] args) {
@@ -145,6 +144,45 @@ public class BombermanGame extends Application {
                 } else if (Map.getValueAtCell(i, j) == 'x') {
                     // Portal
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
+                } else if ('1' <= Map.getValueAtCell(i, j) && Map.getValueAtCell(i, j) <= '5') {
+                    // enemy
+                    if (Map.getValueAtCell(i, j) == '1') {
+                        // balloom
+                        int x = j * Sprite.SCALED_SIZE;
+                        int y = i * Sprite.SCALED_SIZE;
+                        Enemy balloom = new Balloom(x, y, Sprite.balloom_left1.getFxImage(), 0);
+                        balloom.setSpeed(4);
+                        enemies.add((Entity) balloom);
+                    } else if (Map.getValueAtCell(i, j) == '2') {
+                        // doll
+                        int x = j * Sprite.SCALED_SIZE;
+                        int y = i * Sprite.SCALED_SIZE;
+                        Enemy doll = new Doll(x, y, Sprite.doll_left1.getFxImage(), 0);
+                        doll.setSpeed(4);
+                        enemies.add((Entity) doll);
+                    } else if (Map.getValueAtCell(i, j) == '3') {
+                        // kondoria
+                        int x = j * Sprite.SCALED_SIZE;
+                        int y = i * Sprite.SCALED_SIZE;
+                        Enemy kondoria = new Kondoria(x, y, Sprite.kondoria_left1.getFxImage(), 0);
+                        kondoria.setSpeed(4);
+                        enemies.add((Entity) kondoria);
+                    } else if (Map.getValueAtCell(i, j) == '4') {
+                        // minvo
+                        int x = j * Sprite.SCALED_SIZE;
+                        int y = i * Sprite.SCALED_SIZE;
+                        Enemy minvo = new Minvo(x, y, Sprite.minvo_left1.getFxImage(), 0);
+                        minvo.setSpeed(4);
+                        enemies.add((Entity) minvo);
+                    } else if (Map.getValueAtCell(i, j) == '5') {
+                        // oneal
+                        int x = j * Sprite.SCALED_SIZE;
+                        int y = i * Sprite.SCALED_SIZE;
+                        Enemy oneal = new Oneal(x, y, Sprite.oneal_left1.getFxImage(), 0);
+                        oneal.setSpeed(4);
+                        enemies.add((Entity) oneal);
+                    }
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
                 } else {
                     // something else
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
@@ -159,7 +197,6 @@ public class BombermanGame extends Application {
         canvas.setTranslateX(-camera.getxOffset());
         canvas.setTranslateY(-camera.getyOffset());
 
-
         // player collides flames
         if (player.flameCollision(flames)){
             player.setAlive(false);
@@ -170,7 +207,27 @@ public class BombermanGame extends Application {
             player.setAlive(false);
         }
 
-        // enemy collide flames
+        // enemy collides flames
+        for (int idEnemy = 0; idEnemy < enemies.size(); ++idEnemy) {
+            Enemy enemy = (Enemy) enemies.get(idEnemy);
+            if (enemy.isAlive() && enemy.flameCollision(flames)) {
+                enemy.setAlive(false);
+            }
+            if (!enemy.isAlive() && enemy.getTimeLiveLeft() <= 0) {
+                enemies.remove(idEnemy);
+            }
+        }
+
+        // brick collides flames
+        for (int idBrick = 0; idBrick < bricks.size(); ++idBrick) {
+            Brick brick = (Brick) bricks.get(idBrick);
+            if (!brick.isDestroyed() && brick.flameCollision(flames)) {
+                brick.setDestroyed(true);
+            }
+            if (brick.isDestroyed() && brick.getTimeDestroyingCountDown() <= 0) {
+                bricks.remove(idBrick);
+            }
+        }
 
         // update entities
         player.update();

@@ -14,6 +14,16 @@ public class Doll extends Enemy {
 
     @Override
     protected void updateImage() {
+        if (!isAlive()) {
+            if (timeLiveLeft == 0) {
+                img = null;
+                return;
+            }
+            img = Sprite.dieSprite(Sprite.doll_dead, Sprite.doll_dead, Sprite.doll_dead, timeLiveLeft).getFxImage();
+            timeLiveLeft--;
+            return;
+        }
+
         switch (direction) {
             case 0:
             case 1:

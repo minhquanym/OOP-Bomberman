@@ -14,6 +14,16 @@ public class Minvo extends Enemy {
 
     @Override
     protected void updateImage() {
+        if (!isAlive()) {
+            if (timeLiveLeft == 0) {
+                img = null;
+                return;
+            }
+            img = Sprite.dieSprite(Sprite.minvo_dead, Sprite.minvo_dead, Sprite.minvo_dead, timeLiveLeft).getFxImage();
+            timeLiveLeft--;
+            return;
+        }
+
         switch (direction) {
             case 0:
             case 1:

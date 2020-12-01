@@ -24,7 +24,6 @@ public class Bomber extends MovableEntity {
     public List<Bomb> bombList = new ArrayList<Bomb>();
     public int bombRange = 2;
     public int bombLimit = 4;
-    protected int timeLiveLeft;
 
     private KeyCode keyboardInput;
 
@@ -58,12 +57,6 @@ public class Bomber extends MovableEntity {
 
     public void setBombLimit(int bombLimit) {
         this.bombLimit = bombLimit;
-    }
-
-    @Override
-    public void setAlive(boolean alive) {
-        this.timeLiveLeft = 18;
-        this.alive = alive;
     }
 
     public Entity placeBomb() {
@@ -153,12 +146,12 @@ public class Bomber extends MovableEntity {
         if (!this.isAlive()) {
             return false;
         }
-        Rectangle playerRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
+        Rectangle playerRectangle = getBoundingBox();
         for (Entity entity : entities) {
             if (!(entity instanceof Enemy)) {
                 continue;
             }
-            Rectangle enemyRectangle = new Rectangle(entity.getX(), entity.getY(), entity.getImgWidth(), entity.getImgHeight());
+            Rectangle enemyRectangle = entity.getBoundingBox();
             if (playerRectangle.intersects(enemyRectangle.getLayoutBounds())) {
                 return true;
             }
