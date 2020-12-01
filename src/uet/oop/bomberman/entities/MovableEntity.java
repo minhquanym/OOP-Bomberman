@@ -18,7 +18,8 @@ public abstract class MovableEntity extends Entity {
     protected int direction;
     protected boolean isMoving;
     protected int speed;
-    protected boolean alive;
+    protected boolean alive = true;
+    protected int timeLiveLeft;
     protected int animationStep = 0;
     public static int MAX_ANIMATION_STEP = 9400;
 
@@ -32,7 +33,19 @@ public abstract class MovableEntity extends Entity {
         this.animationStep = animationStep;
     }
 
+    public int getTimeLiveLeft() {
+        return timeLiveLeft;
+    }
+
+    public void setTimeLiveLeft(int timeLiveLeft) {
+        this.timeLiveLeft = timeLiveLeft;
+    }
+
     public void setAlive(boolean alive) {
+        if (!alive) {
+            this.timeLiveLeft = 18;
+            isMoving = false;
+        }
         this.alive = alive;
     }
 

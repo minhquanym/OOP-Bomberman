@@ -12,6 +12,9 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.List;
 
 public abstract class Entity {
+    public static final double widthEps = 0.3;
+    public static final double heightEps = 0.3;
+
     protected double x;
     protected double y;
     protected boolean removed = false;
@@ -45,10 +48,20 @@ public abstract class Entity {
     }
 
     public double getImgWidth() {
+        if (img == null) {
+            return 0;
+        }
         return img.getWidth();
     }
     public double getImgHeight() {
+        if (img == null) {
+            return 0;
+        }
         return img.getHeight();
+    }
+
+    Rectangle getBoundingBox() {
+        return new Rectangle(getX()+widthEps, getY()+heightEps, getImgWidth()-widthEps, getImgHeight()-heightEps);
     }
 
     public void render(GraphicsContext gc) {
@@ -59,6 +72,7 @@ public abstract class Entity {
 //        Image base = iv.snapshot(params, null);
 //        gc.drawImage(base, x, y);
 
+        if (img == null) return;
         gc.drawImage(img, x, y);
     }
     public abstract void update();
@@ -67,12 +81,12 @@ public abstract class Entity {
         if (this.getImg() == null) {
             return false;
         }
-        Rectangle entityRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
+        Rectangle entityRectangle = getBoundingBox();
         for (Entity flame : flames) {
             if (!((Flame) flame).isExploded() || flame.getImg() == null) {
                 continue;
             }
-            Rectangle flameRectangle = new Rectangle(flame.getX(), flame.getY(), flame.getImgWidth(), flame.getImgHeight());
+            Rectangle flameRectangle = flame.getBoundingBox();
             if (entityRectangle.intersects(flameRectangle.getLayoutBounds())) {
                 return true;
             }

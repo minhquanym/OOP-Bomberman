@@ -48,8 +48,9 @@ public class BombermanGame extends Application {
 
     public BombermanGame() {
         player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
-//        enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
-//        enemy.setSpeed(7);
+        Enemy enemy = new Balloom(Sprite.SCALED_SIZE*3, Sprite.SCALED_SIZE*2, Sprite.balloom_left1.getFxImage(), 0);
+        enemy.setSpeed(7);
+        enemies.add((Entity) enemy);
     }
 
     public static void main(String[] args) {
@@ -171,6 +172,15 @@ public class BombermanGame extends Application {
         }
 
         // enemy collide flames
+        for (int idEnemy = 0; idEnemy < enemies.size(); ++idEnemy) {
+            Enemy enemy = (Enemy) enemies.get(idEnemy);
+            if (enemy.isAlive() && enemy.flameCollision(flames)) {
+                enemy.setAlive(false);
+            }
+            if (!enemy.isAlive() && enemy.getTimeLiveLeft() == 0) {
+                enemies.remove(idEnemy);
+            }
+        }
 
         // update entities
         player.update();
