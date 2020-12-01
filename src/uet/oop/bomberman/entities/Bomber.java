@@ -143,6 +143,10 @@ public class Bomber extends MovableEntity {
     }
 
     public boolean enemyCollision(List<Entity> entities) {
+        if (!this.isAlive()) {
+            return false;
+        }
+
         Rectangle playerRectangle = getBoundingBox();
         for (Entity entity : entities) {
             if (!(entity instanceof Enemy)) {
