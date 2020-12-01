@@ -150,6 +150,9 @@ public class Bomber extends MovableEntity {
     }
 
     public boolean enemyCollision(List<Entity> entities) {
+        if (!this.isAlive()) {
+            return false;
+        }
         Rectangle playerRectangle = new Rectangle(this.getX(), this.getY(), this.getImgWidth(), this.getImgHeight());
         for (Entity entity : entities) {
             if (!(entity instanceof Enemy)) {

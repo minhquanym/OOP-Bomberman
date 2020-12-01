@@ -179,6 +179,9 @@ public class BombermanGame extends Application {
         staticFinalObjects.forEach(Entity::update);
         bombs.forEach(Entity::update);
         flames.forEach(Entity::update);
+
+        flames.removeIf(flame -> ((Flame) flame).isDone());
+        bombs.removeIf(bomb -> ((Bomb) bomb).isDone());
     }
 
     public void render() {
