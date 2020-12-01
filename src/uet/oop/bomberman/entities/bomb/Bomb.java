@@ -81,6 +81,7 @@ public class Bomb extends Entity {
                 Entity tmp = Map.getEntityAtCoordinate(newX, newY);
                 if (tmp instanceof Brick || tmp instanceof Wall) {
                     if (tmp instanceof Brick) {
+                        flames.add(new Flame(newX, newY, null, flameType[direction + 4]));
                     }
                     break;
                 }
