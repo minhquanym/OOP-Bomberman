@@ -16,10 +16,12 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.enemy.enemyObject.*;
 import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.entities.items.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.sounds.GameSound;
 
@@ -45,6 +47,7 @@ public class BombermanGame extends Application {
     private List<Entity> staticFinalObjects = new ArrayList<>();
     private List<Entity> bricks = new ArrayList<>();
     private List<Entity> bombs = new ArrayList<>();
+    private List<Entity> items = new ArrayList<>();
     private boolean flag = false;
 
     public BombermanGame() {
@@ -138,7 +141,7 @@ public class BombermanGame extends Application {
                 } else if (Map.getValueAtCell(i, j) == ' ') {
                     // Grass
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
-                } else if (Map.getValueAtCell(i, j) == '*') {
+                } else if (Map.getValueAtCell(i, j) == '*' || Map.getValueAtCell(i, j) == 'f' || Map.getValueAtCell(i, j) == 'x' || Map.getValueAtCell(i, j) == 'b' || Map.getValueAtCell(i, j) == 's') {
                     // Brick
                     bricks.add(Map.getEntityAtCell(i, j));
                 } else if (Map.getValueAtCell(i, j) == 'x') {
@@ -191,12 +194,7 @@ public class BombermanGame extends Application {
         }
     }
 
-    public void update() {
-        // update camera
-        camera.update(player);
-        canvas.setTranslateX(-camera.getxOffset());
-        canvas.setTranslateY(-camera.getyOffset());
-
+    private void collisionUpdate() {
         // player collides flames
         if (player.flameCollision(flames)){
             player.setAlive(false);
@@ -225,9 +223,62 @@ public class BombermanGame extends Application {
                 brick.setDestroyed(true);
             }
             if (brick.isDestroyed() && brick.getTimeDestroyingCountDown() <= 0) {
+                int cellX = brick.getCellY();
+                int cellY = brick.getCellX();
+                double x = brick.getX();
+                double y = brick.getY();
+
+                switch (Map.getValueAtCell(cellX, cellY)) {
+                    case '*':
+                        Map.setValueAtCell(cellX, cellY, ' ');
+                        break;
+                    case 'x':
+                        items.add(new Portal(x, y, Sprite.portal.getFxImage()));
+                        break;
+                    case 'f':
+                        items.add(new FlameItem(x, y, Sprite.powerup_flames.getFxImage()));
+                        break;
+                    case 'b':
+                        items.add(new BombItem(x, y, Sprite.powerup_bombs.getFxImage()));
+                        break;
+                    case 's':
+                        items.add(new SpeedItem(x, y, Sprite.powerup_speed.getFxImage()));
+                        break;
+                }
+
                 bricks.remove(idBrick);
+                staticFinalObjects.add(new Grass(x, y, Sprite.grass.getFxImage()));
+                Map.setEntityAtCell(cellX, cellY, new Grass(x, y, Sprite.grass.getFxImage()));
             }
         }
+
+        // item collides player
+        for (int idItem = 0; idItem < items.size(); ++idItem) {
+            Entity item = items.get(idItem);
+            if (((Item) item).playerCollision(player)) {
+                if (item instanceof Portal) {
+
+                } else {
+                    // update player 's power here
+
+                    // remove item
+                    int cellX = item.getCellX();
+                    int cellY = item.getCellY();
+                    Map.setValueAtCell(cellX, cellY, ' ');
+                    items.remove(idItem);
+                }
+            }
+        }
+    }
+
+    public void update() {
+        // update camera
+        camera.update(player);
+        canvas.setTranslateX(-camera.getxOffset());
+        canvas.setTranslateY(-camera.getyOffset());
+
+        // update collision
+        collisionUpdate();
 
         // update entities
         player.update();
@@ -236,6 +287,7 @@ public class BombermanGame extends Application {
         staticFinalObjects.forEach(Entity::update);
         bombs.forEach(Entity::update);
         flames.forEach(Entity::update);
+        items.forEach(Entity::update);
 
         flames.removeIf(flame -> ((Flame) flame).isDone());
         bombs.removeIf(bomb -> ((Bomb) bomb).isDone());
@@ -253,6 +305,7 @@ public class BombermanGame extends Application {
 
         // render entities
         staticFinalObjects.forEach(g -> g.render(gc));
+        items.forEach(g -> g.render(gc));
         bricks.forEach(g -> g.render(gc));
 
         player.render(gc);

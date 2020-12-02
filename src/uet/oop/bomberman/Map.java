@@ -1,17 +1,12 @@
 package uet.oop.bomberman;
 
 import uet.oop.bomberman.entities.*;
-import uet.oop.bomberman.entities.enemy.enemyObject.Balloom;
+import uet.oop.bomberman.entities.items.Portal;
 import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.graphics.SpriteSheet;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Scanner;
-
-import static java.lang.System.exit;
 
 public class Map {
     private static int idLevel;
@@ -37,6 +32,14 @@ public class Map {
         return gameMap[i][j];
     }
 
+    public static void setValueAtCell(int i, int j, char c) {
+        gameMap[i][j] = c;
+    }
+
+    public static void setEntityAtCell(int i, int j, Entity entity) {
+        entityMap[i][j] = entity;
+    }
+
     public static Entity getEntityAtCell(int i, int j) {
         return entityMap[i][j];
     }
@@ -59,7 +62,7 @@ public class Map {
 
     static void loadMap() {
         try {
-            reader = new Scanner(new File("res/levels/Level2.txt"));
+            reader = new Scanner(new File("res/levels/Level1.txt"));
         } catch (FileNotFoundException err) {
             System.out.println("CCCCC\n");
             err.printStackTrace();
@@ -81,10 +84,8 @@ public class Map {
                 int y = i * Sprite.SCALED_SIZE;
                 if (c == '#') {
                     entityMap[i][j] = new Wall(x, y, Sprite.wall.getFxImage());
-                } else if (c == '*') {
+                } else if (c == '*' || c == 'x' || c == 'b' || c == 's' || c == 'f') {
                     entityMap[i][j] = new Brick(x, y, Sprite.brick.getFxImage());
-                } else if (c == 'x') {
-                    entityMap[i][j] = new Portal(x, y, Sprite.portal.getFxImage());
                 } else {
                     entityMap[i][j] = new Grass(x, y, Sprite.grass.getFxImage());
                 }

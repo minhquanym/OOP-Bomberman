@@ -12,8 +12,8 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.List;
 
 public abstract class Entity {
-    public static final double widthEps = 0.3;
-    public static final double heightEps = 0.3;
+    public static final double widthEps = 0.7;
+    public static final double heightEps = 0.7;
 
     protected double x;
     protected double y;
@@ -60,7 +60,7 @@ public abstract class Entity {
         return img.getHeight();
     }
 
-    Rectangle getBoundingBox() {
+    public Rectangle getBoundingBox() {
         return new Rectangle(getX()+widthEps, getY()+heightEps, getImgWidth()-widthEps, getImgHeight()-heightEps);
     }
 
