@@ -12,15 +12,15 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.List;
 
 public abstract class Entity {
-    public static final double widthEps = 0.7;
-    public static final double heightEps = 0.7;
+    public static final double widthEps = 16;
+    public static final double heightEps = 16;
 
     protected double x;
     protected double y;
     protected boolean removed = false;
     protected Image img;
 
-    public Entity( double x, double y, Image img) {
+    public Entity(double x, double y, Image img) {
         this.x = x;
         this.y = y;
         this.img = img;
@@ -29,6 +29,7 @@ public abstract class Entity {
     public double getX() {
         return x;
     }
+
     public double getY() {
         return y;
     }
@@ -36,6 +37,7 @@ public abstract class Entity {
     public int getCellX() {
         return (int) Math.floor((x + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
     }
+
     public int getCellY() {
         return (int) Math.floor((y + Sprite.SCALED_SIZE / 2) / Sprite.SCALED_SIZE);
     }
@@ -43,6 +45,7 @@ public abstract class Entity {
     public void setImg(Image img) {
         this.img = img;
     }
+
     public Image getImg() {
         return this.img;
     }
@@ -53,6 +56,7 @@ public abstract class Entity {
         }
         return img.getWidth();
     }
+
     public double getImgHeight() {
         if (img == null) {
             return 0;
@@ -61,7 +65,7 @@ public abstract class Entity {
     }
 
     public Rectangle getBoundingBox() {
-        return new Rectangle(getX()+widthEps, getY()+heightEps, getImgWidth()-widthEps, getImgHeight()-heightEps);
+        return new Rectangle(getX() + widthEps, getY() + heightEps, getImgWidth() - widthEps, getImgHeight() - heightEps);
     }
 
     public void render(GraphicsContext gc) {
@@ -75,6 +79,7 @@ public abstract class Entity {
         if (img == null) return;
         gc.drawImage(img, x, y);
     }
+
     public abstract void update();
 
     public boolean flameCollision(List<Entity> flames) {

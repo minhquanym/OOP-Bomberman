@@ -55,8 +55,8 @@ public class BombermanGame extends Application {
     }
 
     public static void main(String[] args) {
-        Application.launch(BombermanGame.class);
         new GameSound("sounds/beat.wav");
+        Application.launch(BombermanGame.class);
     }
 
     @Override
@@ -120,6 +120,9 @@ public class BombermanGame extends Application {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
                     Entity bomb = player.placeBomb();
+                    if (bomb == null) {
+                        return;
+                    }
                     bombs.add(bomb);
                     flames.addAll(((Bomb)bomb).getFlames());
 
@@ -259,8 +262,13 @@ public class BombermanGame extends Application {
                 if (item instanceof Portal) {
 
                 } else {
-                    // update player 's power here
-
+                    if (item instanceof SpeedItem) {
+                        player.setSpeed(player.getSpeed() + player.baseSpeed);
+                    } else if (item instanceof BombItem) {
+                        player.setBombLimit(player.getBombLimit() + 1);
+                    } else if (item instanceof FlameItem) {
+                        player.setBombRange(player.getBombRange() + 1);
+                    }
                     // remove item
                     int cellX = item.getCellX();
                     int cellY = item.getCellY();

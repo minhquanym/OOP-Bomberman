@@ -57,6 +57,10 @@ public abstract class MovableEntity extends Entity {
         this.speed = speed;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
     public Set<Integer> getCanDirection() {
         Set<Integer> canDirection = new HashSet<Integer>();
         int[] dx = {0, 1, 0, -1};

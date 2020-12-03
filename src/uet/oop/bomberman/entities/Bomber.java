@@ -22,8 +22,9 @@ public class Bomber extends MovableEntity {
              2
     */
     public List<Bomb> bombList = new ArrayList<Bomb>();
-    public int bombRange = 2;
-    public int bombLimit = 4;
+    public int bombRange = 1;
+    public int bombLimit = 1;
+    public final int baseSpeed = 2;
 
     private KeyCode keyboardInput;
 
@@ -60,6 +61,9 @@ public class Bomber extends MovableEntity {
     }
 
     public Entity placeBomb() {
+        if (bombLimit <= bombList.size()) {
+            return null;
+        }
         Entity bomb = new Bomb((int) Math.round(this.getCellX() * Sprite.SCALED_SIZE),
                 (int) Math.round(this.getCellY() * Sprite.SCALED_SIZE),
                 Sprite.bomb.getFxImage(), this.bombRange);
@@ -77,9 +81,11 @@ public class Bomber extends MovableEntity {
             return;
         }
 
-        if (!bombList.isEmpty()) {
+        while (!bombList.isEmpty()) {
             if (bombList.get(bombList.size() - 1).isExploded()) {
                 bombList.remove(bombList.size() - 1);
+            } else {
+                break;
             }
         }
         isMoving = true;
@@ -143,6 +149,23 @@ public class Bomber extends MovableEntity {
     }
 
     public boolean enemyCollision(List<Entity> entities) {
+        if (!this.isAlive()) {
+            return false;
+        }
+        Rectangle playerRectangle = getBoundingBox();
+        for (Entity entity : entities) {
+            if (!(entity instanceof Enemy)) {
+                continue;
+            }
+            Rectangle enemyRectangle = entity.getBoundingBox();
+            if (playerRectangle.intersects(enemyRectangle.getLayoutBounds())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean itemCollision(List<Entity> entities) {
         if (!this.isAlive()) {
             return false;
         }

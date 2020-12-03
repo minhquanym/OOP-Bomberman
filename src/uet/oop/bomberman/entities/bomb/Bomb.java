@@ -73,17 +73,17 @@ public class Bomb extends Entity {
                 double newX = x + dx[direction] * Sprite.SCALED_SIZE * i;
                 double newY = y + dy[direction] * Sprite.SCALED_SIZE * i;
 
-                if (i == bombLevel) {
-                    flames.add(new Flame(newX, newY, null, flameType[direction + 4]));
-                } else {
-                    flames.add(new Flame(newX, newY, null, flameType[direction]));
-                }
                 Entity tmp = Map.getEntityAtCoordinate(newX, newY);
                 if (tmp instanceof Brick || tmp instanceof Wall) {
                     if (tmp instanceof Brick) {
                         flames.add(new Flame(newX, newY, null, flameType[direction + 4]));
                     }
                     break;
+                }
+                if (i == bombLevel) {
+                    flames.add(new Flame(newX, newY, null, flameType[direction + 4]));
+                } else {
+                    flames.add(new Flame(newX, newY, null, flameType[direction]));
                 }
             }
         }
