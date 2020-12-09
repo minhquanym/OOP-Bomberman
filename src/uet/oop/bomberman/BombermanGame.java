@@ -9,9 +9,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Brick;
@@ -112,7 +109,6 @@ public class BombermanGame extends Application {
                     if (bomb == null) {
                         return;
                     }
-                    Map.placeBomb(bomb);
                     bombs.add(bomb);
                     flames.addAll(((Bomb)bomb).getFlames());
                 } else {
@@ -273,6 +269,8 @@ public class BombermanGame extends Application {
                 }
             }
         }
+
+
     }
 
     public void update() {
@@ -293,8 +291,19 @@ public class BombermanGame extends Application {
         flames.forEach(Entity::update);
         items.forEach(Entity::update);
 
-        flames.removeIf(flame -> ((Flame) flame).isDone());
+        // check first time go through bomb after place.
+        for (Entity bomb : bombs) {
+            if (((Bomb) bomb).isDone()) {
+                Map.removeBomb(bomb);
+            }
+            else if (Math.max(Math.abs(bomb.getX() - player.getX()),
+                    Math.abs(bomb.getY() - player.getY())) >= Sprite.SCALED_SIZE) {
+                Map.placeBomb(bomb);
+            }
+
+        }
         bombs.removeIf(bomb -> ((Bomb) bomb).isDone());
+        flames.removeIf(flame -> ((Flame) flame).isDone());
     }
 
     public void render() {
