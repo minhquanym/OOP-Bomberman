@@ -2,13 +2,11 @@ package uet.oop.bomberman.entities.enemy.enemyObject;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.entities.enemy.moveStrategy.BalloomStrategy;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Kondoria extends Enemy {
     public Kondoria(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
-        enemyAI = BalloomStrategy.getInstance();
         isMoving = true;
     }
 
