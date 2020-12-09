@@ -2,13 +2,13 @@ package uet.oop.bomberman.entities.enemy.enemyObject;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.entities.enemy.moveStrategy.RandomStrategy;
+import uet.oop.bomberman.entities.enemy.moveStrategy.BalloomStrategy;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Oneal extends Enemy {
     public Oneal(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
-        enemyAI = new RandomStrategy();
+        enemyAI = BalloomStrategy.getInstance();
         isMoving = true;
     }
 
@@ -40,10 +40,10 @@ public class Oneal extends Enemy {
         }
     }
 
-    @Override
-    public void update() {
-        direction = enemyAI.getDirection();
-        updateImage();
-        updatePosition();
-    }
+//    @Override
+//    public void update() {
+//        direction = enemyAI.getDirection();
+//        updateImage();
+//        updatePosition();
+//    }
 }

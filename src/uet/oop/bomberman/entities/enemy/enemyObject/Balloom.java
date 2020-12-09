@@ -1,14 +1,25 @@
 package uet.oop.bomberman.entities.enemy.enemyObject;
 
 import javafx.scene.image.Image;
+import javafx.scene.shape.Rectangle;
+import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.Map;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.entities.enemy.moveStrategy.RandomStrategy;
+import uet.oop.bomberman.entities.enemy.moveStrategy.BalloomStrategy;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.List;
+
+/**
+ * moves slowly, turning or reversing directions upon colliding with a wall or bomb.
+ */
 public class Balloom extends Enemy {
+    private List<Entity> listBomb;
+
     public Balloom(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
-        enemyAI = new RandomStrategy();
+        enemyAI = BalloomStrategy.getInstance();
         isMoving = true;
     }
 
@@ -42,10 +53,36 @@ public class Balloom extends Enemy {
 
     @Override
     public void update() {
-        direction = enemyAI.getDirection();
-//        if (!isAlive()) {
-//            isMoving = false;
-//        }
+        int[] dx = {0, 1, 0, -1};
+        int[] dy = {-1, 0, 1, 0};
+
+        int timeTryResetDirection = 0;
+        while (timeTryResetDirection <= 12) {
+            double newX = this.getX() + dx[direction] * speed;
+            double newY = this.getY() + dy[direction] * speed;
+
+            boolean resetDirection = false;
+            if (!isGrass(newX, newY)) {
+                resetDirection = true;
+            }
+
+//            if (!resetDirection) {
+//                for (Entity entity : BombermanGame.bombs) {
+//                    Rectangle rectangle = new Rectangle(newX + Entity.widthEps, newY + Entity.heightEps,
+//                            Sprite.SCALED_SIZE - Entity.widthEps, Sprite.SCALED_SIZE - Entity.heightEps);
+//                    if (rectangle.intersects(entity.getBoundingBox().getLayoutBounds())) {
+//                        resetDirection = true;
+//                        break;
+//                    }
+//                }
+//            }
+
+            if (resetDirection) {
+                direction = enemyAI.getDirection();
+            } else {
+                break;
+            }
+        }
 
         updateImage();
         updatePosition();

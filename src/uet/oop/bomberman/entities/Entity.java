@@ -12,8 +12,8 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.List;
 
 public abstract class Entity {
-    public static final double widthEps = 16;
-    public static final double heightEps = 16;
+    public static final double widthEps = Sprite.DEFAULT_SIZE;
+    public static final double heightEps = Sprite.DEFAULT_SIZE/2;
 
     protected double x;
     protected double y;

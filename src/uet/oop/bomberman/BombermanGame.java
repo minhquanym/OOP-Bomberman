@@ -41,14 +41,14 @@ public class BombermanGame extends Application {
 
     private GameCamera camera;
 
-    private Bomber player;
-    private List<Entity> enemies = new ArrayList<>();
-    private List<Entity> flames = new ArrayList<>();
-    private List<Entity> staticFinalObjects = new ArrayList<>();
-    private List<Entity> bricks = new ArrayList<>();
-    private List<Entity> bombs = new ArrayList<>();
-    private List<Entity> items = new ArrayList<>();
-    private boolean flag = false;
+    public static Bomber player;
+    public static List<Entity> enemies = new ArrayList<>();
+    public static List<Entity> flames = new ArrayList<>();
+    public static List<Entity> staticFinalObjects = new ArrayList<>();
+    public static List<Entity> bricks = new ArrayList<>();
+    public static List<Entity> bombs = new ArrayList<>();
+    public static List<Entity> items = new ArrayList<>();
+    public static boolean flag = false;
 
     public BombermanGame() {
         player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
@@ -108,7 +108,13 @@ public class BombermanGame extends Application {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
-
+                    Entity bomb = player.placeBomb();
+                    if (bomb == null) {
+                        return;
+                    }
+                    Map.placeBomb(bomb);
+                    bombs.add(bomb);
+                    flames.addAll(((Bomb)bomb).getFlames());
                 } else {
                     player.setKeyboardInput(event.getCode());
                 }
@@ -119,13 +125,6 @@ public class BombermanGame extends Application {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.SPACE) {
-                    Entity bomb = player.placeBomb();
-                    if (bomb == null) {
-                        return;
-                    }
-                    bombs.add(bomb);
-                    flames.addAll(((Bomb)bomb).getFlames());
-
                 } else {
                     player.setKeyboardInput(null);
                 }
@@ -147,9 +146,6 @@ public class BombermanGame extends Application {
                 } else if (Map.getValueAtCell(i, j) == '*' || Map.getValueAtCell(i, j) == 'f' || Map.getValueAtCell(i, j) == 'x' || Map.getValueAtCell(i, j) == 'b' || Map.getValueAtCell(i, j) == 's') {
                     // Brick
                     bricks.add(Map.getEntityAtCell(i, j));
-                } else if (Map.getValueAtCell(i, j) == 'x') {
-                    // Portal
-                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
                 } else if ('1' <= Map.getValueAtCell(i, j) && Map.getValueAtCell(i, j) <= '5') {
                     // enemy
                     if (Map.getValueAtCell(i, j) == '1') {
@@ -157,35 +153,35 @@ public class BombermanGame extends Application {
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy balloom = new Balloom(x, y, Sprite.balloom_left1.getFxImage(), 0);
-                        balloom.setSpeed(4);
+                        balloom.setSpeed(2);
                         enemies.add((Entity) balloom);
                     } else if (Map.getValueAtCell(i, j) == '2') {
                         // doll
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy doll = new Doll(x, y, Sprite.doll_left1.getFxImage(), 0);
-                        doll.setSpeed(4);
+                        doll.setSpeed(2);
                         enemies.add((Entity) doll);
                     } else if (Map.getValueAtCell(i, j) == '3') {
                         // kondoria
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy kondoria = new Kondoria(x, y, Sprite.kondoria_left1.getFxImage(), 0);
-                        kondoria.setSpeed(4);
+                        kondoria.setSpeed(2);
                         enemies.add((Entity) kondoria);
                     } else if (Map.getValueAtCell(i, j) == '4') {
                         // minvo
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy minvo = new Minvo(x, y, Sprite.minvo_left1.getFxImage(), 0);
-                        minvo.setSpeed(4);
+                        minvo.setSpeed(2);
                         enemies.add((Entity) minvo);
                     } else if (Map.getValueAtCell(i, j) == '5') {
                         // oneal
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy oneal = new Oneal(x, y, Sprite.oneal_left1.getFxImage(), 0);
-                        oneal.setSpeed(4);
+                        oneal.setSpeed(2);
                         enemies.add((Entity) oneal);
                     }
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
@@ -219,7 +215,7 @@ public class BombermanGame extends Application {
             }
         }
 
-        // brick collides flames
+        // brick collides flames2
         for (int idBrick = 0; idBrick < bricks.size(); ++idBrick) {
             Brick brick = (Brick) bricks.get(idBrick);
             if (!brick.isDestroyed() && brick.flameCollision(flames)) {
