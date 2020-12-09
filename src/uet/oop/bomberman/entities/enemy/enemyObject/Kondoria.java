@@ -1,7 +1,9 @@
 package uet.oop.bomberman.entities.enemy.enemyObject;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.enemy.Enemy;
+import uet.oop.bomberman.entities.enemy.Strategy.BreadthFirstSearch;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Kondoria extends Enemy {
@@ -38,10 +40,17 @@ public class Kondoria extends Enemy {
         }
     }
 
-//    @Override
-//    public void update() {
-//        direction = enemyAI.getDirection();
-//        updateImage();
-//        updatePosition();
-//    }
+    @Override
+    public void update() {
+        if (x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
+            int cellX = getCellX();
+            int cellY = getCellY();
+            int playerCellX = BombermanGame.player.getCellX();
+            int playerCellY = BombermanGame.player.getCellY();
+            direction = BreadthFirstSearch.getDirection(cellX, cellY, playerCellX, playerCellY);
+        }
+
+        updateImage();
+        updatePosition();
+    }
 }

@@ -40,6 +40,7 @@ public class Doll extends Enemy {
 
     @Override
     public void update() {
+        int oldDirection = direction;
         int prioAddition[] = { 1, -1, 2 };
 
         int prioID = 0;
@@ -53,7 +54,8 @@ public class Doll extends Enemy {
             }
 
             if (resetDirection) {
-                direction = (direction + prioAddition[prioID]) % 4;
+                assert(x % Sprite.SCALED_SIZE == 0 && Sprite.SCALED_SIZE == 0);
+                direction = (oldDirection + prioAddition[prioID] + 4) % 4;
                 prioID++;
             } else {
                 break;

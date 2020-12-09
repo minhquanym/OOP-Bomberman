@@ -19,7 +19,7 @@ public abstract class Enemy extends MovableEntity {
     public boolean isGrass(double newX, double newY) {
         for (int c = 0; c < 4; c++) {
             int _x = (int)((newX + (c % 2) + (Sprite.SCALED_SIZE - 1) * (1 - c % 2)) / Sprite.SCALED_SIZE);
-            int _y = (int)((newY + (c / 2) + (Sprite.SCALED_SIZE - 1) * (1 - c / 2)) / Sprite.SCALED_SIZE);
+            int _y = (int)((newY + (int) (c / 2) + (Sprite.SCALED_SIZE - 1) * (1 - (int) (c / 2))) / Sprite.SCALED_SIZE);
             if (!(Map.getEntityAtCell(_y, _x) instanceof Grass)) {
                 return false;
             }
