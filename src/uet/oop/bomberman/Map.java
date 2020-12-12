@@ -60,11 +60,10 @@ public class Map {
         return getEntityAtCell(_y, _x);
     }
 
-    static void loadMap() {
+    static void loadMap(int level) {
         try {
-            reader = new Scanner(new File("res/levels/Level1.txt"));
+            reader = new Scanner(new File("res/levels/Level" + level + ".txt"));
         } catch (FileNotFoundException err) {
-            System.out.println("CCCCC\n");
             err.printStackTrace();
         }
         idLevel = reader.nextInt();

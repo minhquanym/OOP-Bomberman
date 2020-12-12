@@ -6,7 +6,9 @@ import uet.oop.bomberman.entities.Brick;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.sounds.GameSound;
 
+import javax.sound.sampled.Clip;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,8 +112,10 @@ public class Bomb extends Entity {
             tickingCountdown--;
         }
     }
+
     private void explodingImg() {
         if (explosionCountdown == 0) {
+            new GameSound("sounds/explosion.wav", 0);
             setDone(true);
             this.img = null;
         } else {
@@ -119,7 +123,9 @@ public class Bomb extends Entity {
                     Sprite.bomb_exploded2, explosionCountdown, 20).getFxImage();
             explosionCountdown--;
         }
+
     }
+
     @Override
     public void update() {
         if (!isExploded()) {
@@ -128,6 +134,4 @@ public class Bomb extends Entity {
             explodingImg();
         }
     }
-
-    
 }

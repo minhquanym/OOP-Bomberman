@@ -10,7 +10,7 @@ import javax.swing.*;
 public class GameSound extends JFrame {
 
    // Constructor
-   public GameSound(String filePath) {
+   public GameSound(String filePath, int LOOP) {
 
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       try {
@@ -22,7 +22,7 @@ public class GameSound extends JFrame {
          // Open audio clip and load samples from the audio input stream.
          clip.open(audioIn);
          clip.start();
-         clip.loop(Clip.LOOP_CONTINUOUSLY);
+         clip.loop(LOOP);
       } catch (UnsupportedAudioFileException e) {
          e.printStackTrace();
       } catch (IOException e) {

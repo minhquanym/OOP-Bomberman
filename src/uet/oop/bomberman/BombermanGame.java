@@ -22,6 +22,7 @@ import uet.oop.bomberman.entities.items.*;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.sounds.GameSound;
 
+import javax.sound.sampled.Clip;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class BombermanGame extends Application {
 
     private GameCamera camera;
 
+    public static int level = 1;
     public static Bomber player;
     public static List<Entity> enemies = new ArrayList<>();
     public static List<Entity> flames = new ArrayList<>();
@@ -52,7 +54,7 @@ public class BombermanGame extends Application {
     }
 
     public static void main(String[] args) {
-        new GameSound("sounds/beat.wav");
+        new GameSound("sounds/beat.wav", Clip.LOOP_CONTINUOUSLY);
         Application.launch(BombermanGame.class);
     }
 
@@ -129,7 +131,7 @@ public class BombermanGame extends Application {
     }
 
     public void createMap() {
-        Map.loadMap();
+        Map.loadMap(level);
 
         for (int i = 0; i < Map.getNumRow(); i++) {
             for (int j = 0; j < Map.getNumCol(); j++) {
@@ -252,7 +254,8 @@ public class BombermanGame extends Application {
             Entity item = items.get(idItem);
             if (((Item) item).playerCollision(player)) {
                 if (item instanceof Portal) {
-
+                    level += 1;
+                    createMap();
                 } else {
                     if (item instanceof SpeedItem) {
                         player.setSpeed(player.getSpeed() + player.baseSpeed);
@@ -269,7 +272,6 @@ public class BombermanGame extends Application {
                 }
             }
         }
-
 
     }
 
