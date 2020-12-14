@@ -42,13 +42,13 @@ public class Kondoria extends Enemy {
 
     @Override
     public void update() {
-        if (x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
-            int cellX = getCellX();
-            int cellY = getCellY();
-            int playerCellX = BombermanGame.player.getCellX();
-            int playerCellY = BombermanGame.player.getCellY();
-            direction = BreadthFirstSearch.getDirection(cellX, cellY, playerCellX, playerCellY);
-        }
+//        if (x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
+//            int cellX = getCellX();
+//            int cellY = getCellY();
+//            int playerCellX = BombermanGame.player.getCellX();
+//            int playerCellY = BombermanGame.player.getCellY();
+//            direction = BreadthFirstSearch.getDirection(cellX, cellY, playerCellX, playerCellY);
+//        }
 
         updateImage();
         updatePosition();

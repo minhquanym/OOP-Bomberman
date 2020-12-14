@@ -39,6 +39,7 @@ public class BombermanGame extends Application {
 
     private GameCamera camera;
 
+    public static boolean levelUp = false;
     public static int level = 1;
     public static Bomber player;
     public static List<Entity> enemies = new ArrayList<>();
@@ -50,7 +51,6 @@ public class BombermanGame extends Application {
     public static boolean flag = false;
 
     public BombermanGame() {
-        player = new Bomber(Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
     }
 
     public static void main(String[] args) {
@@ -58,8 +58,16 @@ public class BombermanGame extends Application {
         Application.launch(BombermanGame.class);
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    Scene buildNewSceneLevel() {
+        // reset
+        enemies = new ArrayList<>();
+        flames = new ArrayList<>();
+        staticFinalObjects = new ArrayList<>();
+        bricks = new ArrayList<>();
+        bombs = new ArrayList<>();
+        items = new ArrayList<>();
+        flag = false;
+
         // create map
         createMap();
 
@@ -73,34 +81,6 @@ public class BombermanGame extends Application {
 
         // create scene
         Scene scene = new Scene(root);
-
-        // add scene to stage
-        stage.setHeight(HEIGHT * Sprite.SCALED_SIZE);
-        stage.setWidth(WIDTH * Sprite.SCALED_SIZE);
-        stage.setScene(scene);
-        stage.show();
-
-        // set up camera
-        camera = new GameCamera();
-
-        // initialize animation timer
-        AnimationTimer timer = new AnimationTimer() {
-            long lastTime = 0;
-            final long timeRender = 100000000/3;
-
-            @Override
-            public void handle(long now) {
-                if (now - lastTime >= timeRender) {
-                    update();
-                    render();
-                    lastTime = now;
-                }
-            }
-        };
-
-        // start
-        render();
-        timer.start();
 
         // add key listener to scene
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -128,6 +108,50 @@ public class BombermanGame extends Application {
                 }
             }
         });
+
+        return scene;
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        Scene scene = buildNewSceneLevel();
+
+        // add scene to stage
+        stage.setHeight(HEIGHT * Sprite.SCALED_SIZE);
+        stage.setWidth(WIDTH * Sprite.SCALED_SIZE);
+        stage.setScene(scene);
+        stage.show();
+
+        // set up camera
+        camera = new GameCamera();
+
+        // initialize animation timer
+        AnimationTimer timer = new AnimationTimer() {
+            long lastTime = 0;
+            final long timeRender = 100000000/3;
+
+            @Override
+            public void handle(long now) {
+                if (now - lastTime >= timeRender) {
+                    if (levelUp) {
+                        levelUp = false;
+                        createMap();
+                        Scene scene = buildNewSceneLevel();
+                        stage.setScene(scene);
+                    }
+
+                    update();
+                    render();
+                    lastTime = now;
+                }
+            }
+        };
+
+        // start
+        render();
+        timer.start();
+
+
     }
 
     public void createMap() {
@@ -135,7 +159,11 @@ public class BombermanGame extends Application {
 
         for (int i = 0; i < Map.getNumRow(); i++) {
             for (int j = 0; j < Map.getNumCol(); j++) {
-                if (Map.getValueAtCell(i, j) == '#') {
+                if (Map.getValueAtCell(i, j) == 'p') {
+                    // player
+                    player = new Bomber(j * Sprite.SCALED_SIZE, i * Sprite.SCALED_SIZE, Sprite.player_right.getFxImage(), 0, 1, false, 4);
+                    staticFinalObjects.add(Map.getEntityAtCell(i, j));
+                } else if (Map.getValueAtCell(i, j) == '#') {
                     // Wall
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));
                 } else if (Map.getValueAtCell(i, j) == ' ') {
@@ -255,7 +283,8 @@ public class BombermanGame extends Application {
             if (((Item) item).playerCollision(player)) {
                 if (item instanceof Portal) {
                     level += 1;
-                    createMap();
+                    levelUp = true;
+                    return;
                 } else {
                     if (item instanceof SpeedItem) {
                         player.setSpeed(player.getSpeed() + player.baseSpeed);
