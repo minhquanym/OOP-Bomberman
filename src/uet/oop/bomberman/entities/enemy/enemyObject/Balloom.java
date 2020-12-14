@@ -1,12 +1,9 @@
 package uet.oop.bomberman.entities.enemy.enemyObject;
 
 import javafx.scene.image.Image;
-import javafx.scene.shape.Rectangle;
-import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.Map;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemy.Enemy;
-import uet.oop.bomberman.entities.enemy.moveStrategy.BalloomStrategy;
+import uet.oop.bomberman.entities.enemy.Strategy.RandomDirection;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
@@ -19,7 +16,6 @@ public class Balloom extends Enemy {
 
     public Balloom(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
-        enemyAI = BalloomStrategy.getInstance();
         isMoving = true;
     }
 
@@ -53,9 +49,6 @@ public class Balloom extends Enemy {
 
     @Override
     public void update() {
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {-1, 0, 1, 0};
-
         int timeTryResetDirection = 0;
         while (timeTryResetDirection <= 12) {
             double newX = this.getX() + dx[direction] * speed;
@@ -66,19 +59,8 @@ public class Balloom extends Enemy {
                 resetDirection = true;
             }
 
-//            if (!resetDirection) {
-//                for (Entity entity : BombermanGame.bombs) {
-//                    Rectangle rectangle = new Rectangle(newX + Entity.widthEps, newY + Entity.heightEps,
-//                            Sprite.SCALED_SIZE - Entity.widthEps, Sprite.SCALED_SIZE - Entity.heightEps);
-//                    if (rectangle.intersects(entity.getBoundingBox().getLayoutBounds())) {
-//                        resetDirection = true;
-//                        break;
-//                    }
-//                }
-//            }
-
             if (resetDirection) {
-                direction = enemyAI.getDirection();
+                direction = RandomDirection.getDirection();
             } else {
                 break;
             }

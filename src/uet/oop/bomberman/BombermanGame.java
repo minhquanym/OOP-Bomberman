@@ -165,21 +165,21 @@ public class BombermanGame extends Application {
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy kondoria = new Kondoria(x, y, Sprite.kondoria_left1.getFxImage(), 0);
-                        kondoria.setSpeed(2);
+                        kondoria.setSpeed(1);
                         enemies.add((Entity) kondoria);
                     } else if (Map.getValueAtCell(i, j) == '4') {
                         // minvo
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy minvo = new Minvo(x, y, Sprite.minvo_left1.getFxImage(), 0);
-                        minvo.setSpeed(2);
+                        minvo.setSpeed(1);
                         enemies.add((Entity) minvo);
                     } else if (Map.getValueAtCell(i, j) == '5') {
                         // oneal
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy oneal = new Oneal(x, y, Sprite.oneal_left1.getFxImage(), 0);
-                        oneal.setSpeed(2);
+                        oneal.setSpeed(4);
                         enemies.add((Entity) oneal);
                     }
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));

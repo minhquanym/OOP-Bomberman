@@ -120,6 +120,8 @@ public class Bomber extends MovableEntity {
             return;
         }
 
+//            System.out.println(x + " " + y);
+
         switch (direction) {
             case 0:
                 img = Sprite.player_up.getFxImage();
