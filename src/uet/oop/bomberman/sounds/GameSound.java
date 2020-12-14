@@ -31,5 +31,4 @@ public class GameSound extends JFrame {
          e.printStackTrace();
       }
    }
-
 }

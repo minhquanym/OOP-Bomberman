@@ -1,6 +1,5 @@
 package uet.oop.bomberman.entities.enemy.Strategy;
 
-import com.sun.jmx.remote.internal.ArrayQueue;
 import javafx.util.Pair;
 import uet.oop.bomberman.Map;
 

@@ -54,7 +54,7 @@ public class BombermanGame extends Application {
     }
 
     public static void main(String[] args) {
-        new GameSound("sounds/beat.wav", Clip.LOOP_CONTINUOUSLY);
+        new GameSound("sounds/beat2.wav", Clip.LOOP_CONTINUOUSLY);
         Application.launch(BombermanGame.class);
     }
 
@@ -220,20 +220,20 @@ public class BombermanGame extends Application {
     }
 
     private void collisionUpdate() {
-        // player collides flames
-        if (player.flameCollision(flames)){
-            player.setAlive(false);
+        if (player.isAlive()) {
+            // player collides flames
+            if (player.flameCollision(flames) || player.enemyCollision(enemies)){
+                new GameSound("sounds/die.wav", 0);
+                player.setAlive(false);
+            }
         }
 
-        // player collides enemy
-        if (player.enemyCollision(enemies)) {
-            player.setAlive(false);
-        }
 
         // enemy collides flames
         for (int idEnemy = 0; idEnemy < enemies.size(); ++idEnemy) {
             Enemy enemy = (Enemy) enemies.get(idEnemy);
             if (enemy.isAlive() && enemy.flameCollision(flames)) {
+                new GameSound("sounds/die.wav", 0);
                 enemy.setAlive(false);
             }
             if (!enemy.isAlive() && enemy.getTimeLiveLeft() <= 0) {
@@ -282,6 +282,9 @@ public class BombermanGame extends Application {
             Entity item = items.get(idItem);
             if (((Item) item).playerCollision(player)) {
                 if (item instanceof Portal) {
+                    if (enemies.size() > 0) {
+                        continue;
+                    }
                     level += 1;
                     levelUp = true;
                     return;
