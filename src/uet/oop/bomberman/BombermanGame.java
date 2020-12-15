@@ -16,6 +16,7 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
+import uet.oop.bomberman.entities.enemy.Strategy.BreadthFirstSearch;
 import uet.oop.bomberman.entities.enemy.enemyObject.*;
 import uet.oop.bomberman.entities.enemy.Enemy;
 import uet.oop.bomberman.entities.items.*;
@@ -67,6 +68,8 @@ public class BombermanGame extends Application {
         bombs = new ArrayList<>();
         items = new ArrayList<>();
         flag = false;
+
+        BreadthFirstSearch.removeInstance();
 
         // create map
         createMap();
@@ -200,14 +203,14 @@ public class BombermanGame extends Application {
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy minvo = new Minvo(x, y, Sprite.minvo_left1.getFxImage(), 0);
-                        minvo.setSpeed(1);
+                        minvo.setSpeed(4);
                         enemies.add((Entity) minvo);
                     } else if (Map.getValueAtCell(i, j) == '5') {
                         // oneal
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy oneal = new Oneal(x, y, Sprite.oneal_left1.getFxImage(), 0);
-                        oneal.setSpeed(4);
+                        oneal.setSpeed(2);
                         enemies.add((Entity) oneal);
                     }
                     staticFinalObjects.add(Map.getEntityAtCell(i, j));

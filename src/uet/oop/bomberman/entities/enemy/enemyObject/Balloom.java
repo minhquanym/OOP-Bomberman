@@ -12,7 +12,7 @@ import java.util.List;
  * moves slowly, turning or reversing directions upon colliding with a wall or bomb.
  */
 public class Balloom extends Enemy {
-    private List<Entity> listBomb;
+    private boolean flag = false;
 
     public Balloom(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
@@ -49,14 +49,20 @@ public class Balloom extends Enemy {
 
     @Override
     public void update() {
+        double preX = x;
+        double preY = y;
+
         int timeTryResetDirection = 0;
-        while (timeTryResetDirection <= 12) {
+        while (timeTryResetDirection++ <= 12) {
             double newX = this.getX() + dx[direction] * speed;
             double newY = this.getY() + dy[direction] * speed;
 
             boolean resetDirection = false;
             if (!isGrass(newX, newY)) {
                 resetDirection = true;
+            } else if (flag) {
+                resetDirection = true;
+                break;
             }
 
             if (resetDirection) {
@@ -68,5 +74,9 @@ public class Balloom extends Enemy {
 
         updateImage();
         updatePosition();
+
+        if (preX == x && preY == y) {
+            flag = true;
+        }
     }
 }
