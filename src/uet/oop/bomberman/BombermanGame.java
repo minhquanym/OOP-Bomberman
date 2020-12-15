@@ -7,6 +7,8 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -25,6 +27,8 @@ import uet.oop.bomberman.sounds.GameSound;
 
 import javax.sound.sampled.Clip;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,6 +119,58 @@ public class BombermanGame extends Application {
         return scene;
     }
 
+    Scene gameOverScene() throws FileNotFoundException {
+        //Creating an image
+        Image image = new Image(new FileInputStream("res/images/gameover.jpg"));
+
+        //Setting the image view
+        ImageView imageView = new ImageView(image);
+
+        //Setting the position of the image
+        imageView.setX(0);
+        imageView.setY(100);
+
+        //setting the fit height and width of the image view
+        imageView.setFitHeight(HEIGHT * Sprite.SCALED_SIZE);
+        imageView.setFitWidth(WIDTH * Sprite.SCALED_SIZE);
+
+        //Setting the preserve ratio of the image view
+        imageView.setPreserveRatio(true);
+
+        //Creating a Group object
+        Group root = new Group(imageView);
+
+        //Creating a scene object
+        Scene scene = new Scene(root, WIDTH * Sprite.SCALED_SIZE, HEIGHT * Sprite.SCALED_SIZE);
+        return scene;
+    }
+
+    Scene winnerScene() throws FileNotFoundException {
+        //Creating an image
+        Image image = new Image(new FileInputStream("res/images/winner.png"));
+
+        //Setting the image view
+        ImageView imageView = new ImageView(image);
+
+        //Setting the position of the image
+        imageView.setX(0);
+        imageView.setY(25);
+
+        //setting the fit height and width of the image view
+        imageView.setFitHeight(HEIGHT * Sprite.SCALED_SIZE);
+        imageView.setFitWidth(WIDTH * Sprite.SCALED_SIZE);
+
+        //Setting the preserve ratio of the image view
+        imageView.setPreserveRatio(true);
+
+        //Creating a Group object
+        Group root = new Group(imageView);
+
+        //Creating a scene object
+        Scene scene = new Scene(root, WIDTH * Sprite.SCALED_SIZE, HEIGHT * Sprite.SCALED_SIZE);
+        return scene;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Scene scene = buildNewSceneLevel();
@@ -136,16 +192,32 @@ public class BombermanGame extends Application {
             @Override
             public void handle(long now) {
                 if (now - lastTime >= timeRender) {
-                    if (levelUp) {
-                        levelUp = false;
-                        createMap();
-                        Scene scene = buildNewSceneLevel();
-                        stage.setScene(scene);
+                    if (!player.isAlive()) {
+                        try {
+                            stage.setScene(gameOverScene());
+                        } catch (FileNotFoundException err) {
+                            err.printStackTrace();
+                        }
                     }
+                    else {
+                        if (levelUp) {
+                            if (level > 3) {
+                                try {
+                                    stage.setScene(winnerScene());
+                                } catch (FileNotFoundException err) {
+                                    err.printStackTrace();
+                                }
+                            }
+                            levelUp = false;
+                            createMap();
+                            Scene scene = buildNewSceneLevel();
+                            stage.setScene(scene);
+                        }
 
-                    update();
-                    render();
-                    lastTime = now;
+                        update();
+                        render();
+                        lastTime = now;
+                    }
                 }
             }
         };
@@ -228,7 +300,6 @@ public class BombermanGame extends Application {
                 player.setAlive(false);
             }
         }
-
 
         // enemy collides flames
         for (int idEnemy = 0; idEnemy < enemies.size(); ++idEnemy) {
