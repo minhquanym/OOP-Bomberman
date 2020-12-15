@@ -75,20 +75,15 @@ public class BreadthFirstSearch {
     }
 
     public static int getDirection(int u, int v, int x, int y) {
-        System.out.println(u + " " + v + " || " + x + " " + y + "\n" + Map.getNumRow() + " " + Map.getNumCol());
-
         if (!isLoad) {
             newInstance();
         }
 
         if (dist[u][v][x][y] == 0) {
-                System.out.println("LAG\n");
             return RandomDirection.getDirection();
         }
 
-        System.out.println(Trace[x][y][u][v] + " --> " + dx[Trace[x][y][u][v]] + " " + dy[Trace[x][y][u][v]]);
-
-        int revDir = (4 - Trace[x][y][u][v]) % 4;
+        int revDir = (Trace[x][y][u][v] + 2) % 4;
         return convertCellDirectionToDirection(revDir);
     }
 }

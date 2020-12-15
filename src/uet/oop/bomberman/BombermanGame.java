@@ -153,8 +153,6 @@ public class BombermanGame extends Application {
         // start
         render();
         timer.start();
-
-
     }
 
     public void createMap() {
@@ -196,7 +194,7 @@ public class BombermanGame extends Application {
                         int x = j * Sprite.SCALED_SIZE;
                         int y = i * Sprite.SCALED_SIZE;
                         Enemy kondoria = new Kondoria(x, y, Sprite.kondoria_left1.getFxImage(), 0);
-                        kondoria.setSpeed(1);
+                        kondoria.setSpeed(2);
                         enemies.add((Entity) kondoria);
                     } else if (Map.getValueAtCell(i, j) == '4') {
                         // minvo

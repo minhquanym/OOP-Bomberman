@@ -17,6 +17,7 @@ import java.util.List;
  */
 public class Minvo extends Enemy {
     private final int runAwayDistance = 7;
+    private boolean flag = false;
 
     public Minvo(int x, int y, Image img, int animationStep) {
         super(x, y, img, animationStep);
@@ -53,43 +54,70 @@ public class Minvo extends Enemy {
 
     @Override
     public void update() {
-        if (x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
-            // when nearby player move toward to player (mahattan distance)
-            int playerCellX = BombermanGame.player.getCellX();
-            int playerCellY = BombermanGame.player.getCellY();
-            int distance = Math.abs(getCellX() - playerCellX)
-                    + Math.abs(getCellY() - playerCellY);
+        double preX = x;
+        double preY = y;
 
-            if (distance <= runAwayDistance) {
-                List<Pair<Integer, Integer>> priorityDirection = new ArrayList<>();
-                for (int dir = 0; dir < 4; ++dir) {
-                    if (!isGrass(getX() + dx[dir] * speed, getY() + dy[dir] * speed)) {
-                        priorityDirection.add(new Pair<Integer, Integer>(1000000, dir));
-                        continue;
-                    }
+        if (flag) {
+            int timeTryResetDirection = 0;
+            while (timeTryResetDirection++ <= 12) {
+                double newX = this.getX() + dx[direction] * speed;
+                double newY = this.getY() + dy[direction] * speed;
 
-                    int newX = (int) getX() + dx[dir] * speed;
-                    int newY = (int) getY() + dy[dir] * speed;
-                    int newDistance = Math.abs(newX - (int) BombermanGame.player.getX())
-                            + Math.abs(newY - (int) BombermanGame.player.getY());
-                    priorityDirection.add(new Pair<Integer, Integer>(-newDistance, dir));
+                boolean resetDirection = false;
+                if (!isGrass(newX, newY)) {
+                    resetDirection = true;
                 }
-                Collections.sort(priorityDirection, new Comparator<Pair<Integer, Integer>>() {
-                    @Override
-                    public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2) {
-                        if (o1.getKey() < o2.getKey()) return -1;
-                        if (o1.getKey() > o2.getKey()) return 1;
-                        return 0;
-                    }
-                });
 
-                direction = priorityDirection.get(0).getValue();
-            } else {
-                direction = RandomDirection.getDirection();
+                if (resetDirection) {
+                    direction = RandomDirection.getDirection();
+                } else {
+                    break;
+                }
+            }
+
+            flag = false;
+        } else {
+            if (x % Sprite.SCALED_SIZE == 0 && y % Sprite.SCALED_SIZE == 0) {
+                int playerCellX = BombermanGame.player.getCellX();
+                int playerCellY = BombermanGame.player.getCellY();
+                int distance = Math.abs(getCellX() - playerCellX)
+                        + Math.abs(getCellY() - playerCellY);
+
+                if (distance <= runAwayDistance) {
+                    List<Pair<Integer, Integer>> priorityDirection = new ArrayList<>();
+                    for (int dir = 0; dir < 4; ++dir) {
+                        if (!isGrass(getX() + dx[dir] * speed, getY() + dy[dir] * speed)) {
+                            priorityDirection.add(new Pair<Integer, Integer>(1000000, dir));
+                            continue;
+                        }
+
+                        int newX = (int) getX() + dx[dir] * speed;
+                        int newY = (int) getY() + dy[dir] * speed;
+                        int newDistance = Math.abs(newX - (int) BombermanGame.player.getX())
+                                + Math.abs(newY - (int) BombermanGame.player.getY());
+                        priorityDirection.add(new Pair<Integer, Integer>(-newDistance, dir));
+                    }
+                    Collections.sort(priorityDirection, new Comparator<Pair<Integer, Integer>>() {
+                        @Override
+                        public int compare(Pair<Integer, Integer> o1, Pair<Integer, Integer> o2) {
+                            if (o1.getKey() < o2.getKey()) return -1;
+                            if (o1.getKey() > o2.getKey()) return 1;
+                            return 0;
+                        }
+                    });
+
+                    direction = priorityDirection.get(0).getValue();
+                } else {
+                    direction = RandomDirection.getDirection();
+                }
             }
         }
 
         updateImage();
         updatePosition();
+
+        if (x == preX && y == preY) {
+            flag = true;
+        }
     }
 }
